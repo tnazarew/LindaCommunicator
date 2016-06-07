@@ -4,12 +4,13 @@
 
 #ifndef LINDACOMMUNICATOR_TOUPLE_H
 #define LINDACOMMUNICATOR_TOUPLE_H
+
+#include <string>
 namespace linda
 {
     struct Tuple
     {
-        char free;
-
+        std::string content;
     };
 }
 #endif //LINDACOMMUNICATOR_TOUPLE_H
