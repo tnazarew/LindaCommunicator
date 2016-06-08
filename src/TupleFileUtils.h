@@ -12,22 +12,22 @@
 
 namespace linda {
     class TupleFileUtils {
+    public:
         struct tuple {
             char taken;
             char pattern[99];
         };
+        static int lockRecord(int fd, int length, int record_id);
 
-        int lockRecord(int fd, int length, int record_id);
+        static int unlockRecord(int fd, int length, int record_id);
 
-        int unlockRecord(int fd, int length, int record_id);
+        static int readRecord(int fd, tuple *tuple_ptr, int record_id);
 
-        int readRecord(int fd, struct tuple *tuple_ptr, int record_id);
+        static int writeRecord(int fd, tuple *tuple_ptr, int record_id);
 
-        int writeRecord(int fd, struct tuple *tuple_ptr, int record_id);
+        static int checkRecordTaken(int fd, int record_id);
 
-        int checkRecordTaken(int fd, int record_id);
-
-        int setRecordTaken(int fd, int record_id, char taken);
+        static int setRecordTaken(int fd, int record_id, char taken);
     };
 }
 

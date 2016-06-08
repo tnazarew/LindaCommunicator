@@ -12,8 +12,9 @@
 
 namespace linda
 {
-    class ProccessFileUtils {
+    class ProcessFileUtils {
 
+    public:
         struct process {
             char taken;
             char flag;
@@ -22,17 +23,17 @@ namespace linda
             char pattern[99];
         };
 
-        int lockRecord(int fd, int length, int record_id);
+        static int lockRecord(int fd, int length, int record_id);
 
-        int unlockRecord(int fd, int length, int record_id);
+        static int unlockRecord(int fd, int length, int record_id);
 
-        int readRecord(int fd, struct process *process_ptr, int record_id);
+        static int readRecord(int fd, process *process_ptr, int record_id);
 
-        int writeRecord(int fd, struct process *process_ptr, int record_id);
+        static int writeRecord(int fd, process *process_ptr, int record_id);
 
-        int checkRecordTaken(int fd, int record_id);
+        static int checkRecordTaken(int fd, int record_id);
 
-        int setRecordTaken(int fd, int record_id, char taken);
+        static int setRecordTaken(int fd, int record_id, char taken);
     };
 }
 
