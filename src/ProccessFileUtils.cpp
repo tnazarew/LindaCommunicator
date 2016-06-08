@@ -34,7 +34,7 @@ int linda::ProccessFileUtils::writeRecord(int fd, struct process *process_ptr, i
 
 int linda::ProccessFileUtils::checkRecordTaken(int fd, int record_id) {
     char flag;
-    lseek(fd, sizeof(char), 0);
+    lseek(fd, record_id * sizeof(struct process), 0);
     if (!read(fd, &flag, sizeof(char))) {
         return flag;
     }
@@ -42,6 +42,13 @@ int linda::ProccessFileUtils::checkRecordTaken(int fd, int record_id) {
         return -1;
     }
 }
+
+int linda::ProccessFileUtils::setRecordTaken(int fd, int record_id, char taken) {
+    lseek(fd, record_id * sizeof(struct process), 0);
+    return write(fd, &taken, sizeof(char));
+}
+
+
 
 
 

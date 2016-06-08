@@ -26,6 +26,8 @@ namespace linda {
         int writeRecord(int fd, struct tuple *tuple_ptr, int record_id);
 
         int checkRecordTaken(int fd, int record_id);
+
+        int setRecordTaken(int fd, int record_id, char taken);
     };
 }
 
