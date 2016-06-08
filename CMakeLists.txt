@@ -9,7 +9,7 @@ include_directories(
 
 add_library(${PROJECT_NAME}
         src/LindaCommunicator.cpp
-        include/pid.h include/tuple.h)
+        )
 
 add_executable(main main.cpp)
 target_link_libraries(main ${PROJECT_NAME})

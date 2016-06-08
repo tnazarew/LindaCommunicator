@@ -5,14 +5,19 @@
 #ifndef LINDACOMMUNICATOR_LINDACOMMUNICATOR_H
 #define LINDACOMMUNICATOR_LINDACOMMUNICATOR_H
 
+#include <string>
+#include <vector>
+#include <pid.h>
+#include <tuple.h>
+#include <fstream>
 
 namespace linda
 {
+    static const std::string DEFAULT_FILEPATH = "";
+    static const int MAX_TUPLE_SIZE = 0;
+    static const std::string DEF_MES_FILE_PREF = "";
     class LindaCommunicator
     {
-        static const std::string DEFAULT_FILEPATH = "";
-        static const int MAX_TUPLE_SIZE = 0;
-        static const std::string DEF_MES_FILE_PREF = "";
         int searchFile();
         int insertPID(unsigned int offset);
         int insertTuple(unsigned int offset);
@@ -21,7 +26,7 @@ namespace linda
         void wakeProcess(pid_t pid);
         void wakeProcesses();
         void sortQueue();
-        void findMatching(std::string pattern)
+        void findMatching(std::string pattern);
         std::vector<Pid> queue;
 
 
