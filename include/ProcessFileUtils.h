@@ -12,7 +12,7 @@
 
 namespace linda
 {
-    class ProccessFileUtils {
+    class ProcessFileUtils {
     public:
         struct process {
             char taken; // taken - 1 | free - 0
@@ -25,15 +25,15 @@ namespace linda
             bool operator<(const process& other) const ;
         };
 
-        ProccessFileUtils() {};
+
 
         static int lockRecord(int fd, int length, int record_id);
 
         static int unlockRecord(int fd, int length, int record_id);
 
-        static int readRecord(int fd, ProccessFileUtils:: process *process_ptr, int record_id);
+        static int readRecord(int fd, ProcessFileUtils:: process *process_ptr, int record_id);
 
-        static int writeRecord(int fd, ProccessFileUtils:: process *process_ptr, int record_id);
+        static int writeRecord(int fd, ProcessFileUtils:: process *process_ptr, int record_id);
 
         static int checkRecordTaken(int fd, int record_id);
 

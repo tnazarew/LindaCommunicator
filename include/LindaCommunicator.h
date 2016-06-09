@@ -10,7 +10,7 @@
 #include <pid.h>
 #include <tuple.h>
 #include <fstream>
-#include <ProccessFileUtils.h>
+#include <ProcessFileUtils.h>
 #include <TupleFileUtils.h>
 namespace linda
 {
@@ -26,7 +26,7 @@ namespace linda
         int removeTuple(unsigned int offset);
         void wakeProcess(pid_t pid);
         void wakeProcesses(int fd, linda::TupleFileUtils::tuple *tuple);
-        void sortQueue(std::vector<ProccessFileUtils::process>&);
+        void sortQueue(std::vector<ProcessFileUtils::process>&);
         void findMatching(std::string pattern);
         std::vector<Pid> queue;
 

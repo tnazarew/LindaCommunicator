@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <PatternComparator.h>
-#include <ProccessFileUtils.h>
+#include "ProcessFileUtils.h"
 #include <TupleFileUtils.h>
 #include <MatchesFinder.h>
 
@@ -14,12 +14,12 @@ int main()
 {
     int lfd = open("/tmp/linda_tuples.txt", O_RDWR | O_CREAT);
     int pfd = open("/tmp/linda_proc.txt", O_RDWR | O_CREAT);
-    ProccessFileUtils::process pr;
+    ProcessFileUtils::process pr;
     TupleFileUtils::tuple tu;
     std::string tuple_pattern = "1,\"abc\",3.1415,\"e\"";
     std::string process_pattern = "i:1,s:\"abc\",f:*,s:>\"d\"";
 
-    ProccessFileUtils p;
+    ProcessFileUtils p;
     TupleFileUtils t;
 
     strcpy(pr.pattern, process_pattern.c_str());
@@ -28,9 +28,9 @@ int main()
     pr.taken = 1;
     pr.timestamp = time(NULL);
     for(int i = 0; i < 10; ++i) {
-        p.lockRecord(pfd, sizeof(struct ProccessFileUtils::process), i);
+        p.lockRecord(pfd, sizeof(struct ProcessFileUtils::process), i);
         p.writeRecord(pfd, &pr, i);
-        p.unlockRecord(pfd, sizeof(struct ProccessFileUtils::process), i);
+        p.unlockRecord(pfd, sizeof(struct ProcessFileUtils::process), i);
     }
 
     strcpy(tu.pattern, tuple_pattern.c_str());
@@ -45,7 +45,7 @@ int main()
     TupleFileUtils::tuple* foundTuple = MatchesFinder::returnBlockedTuple(&pr);
 
 
-    std::vector<ProccessFileUtils::process *> processes = MatchesFinder::returnProcessQueue(foundTuple);
+    std::vector<ProcessFileUtils::process *> processes = MatchesFinder::returnProcessQueue(foundTuple);
 
     int fd = open("filename", O_RDWR|O_CREAT);
     TupleFileUtils::tuple tuple;

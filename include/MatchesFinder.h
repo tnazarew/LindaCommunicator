@@ -9,14 +9,14 @@
 #include <string>
 #include <vector>
 #include "TupleFileUtils.h"
-#include "ProccessFileUtils.h"
+#include "ProcessFileUtils.h"
 
 namespace linda {
 
     class MatchesFinder {
     public:
-        static TupleFileUtils::tuple* returnBlockedTuple(ProccessFileUtils::process* process );
-        static std::vector<ProccessFileUtils::process *> returnProcessQueue(TupleFileUtils::tuple* tuple);
+        static TupleFileUtils::tuple* returnBlockedTuple(ProcessFileUtils::process* process );
+        static std::vector<ProcessFileUtils::process *> returnProcessQueue(TupleFileUtils::tuple* tuple);
     };
 }
 

@@ -5,7 +5,7 @@
 #include "MatchesFinder.h"
 #include "PatternComparator.h"
 
-linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(linda::ProccessFileUtils::process *process) {
+linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(linda::ProcessFileUtils::process *process) {
 
     int lfd = open("/tmp/linda_tuples.txt", O_RDWR | O_CREAT);
     int index = 0;
@@ -36,18 +36,18 @@ linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(linda::Pr
     t.unlockRecord(lfd, sizeof(struct TupleFileUtils::tuple), 0);*/
 }
 
-std::vector<linda::ProccessFileUtils::process *> linda::MatchesFinder::returnProcessQueue(linda::TupleFileUtils::tuple *tuple) {
+std::vector<linda::ProcessFileUtils::process *> linda::MatchesFinder::returnProcessQueue(linda::TupleFileUtils::tuple *tuple) {
 
     int lfd = open("/tmp/linda_proc.txt", O_RDWR | O_CREAT);
-    std::vector<ProccessFileUtils::process *> processes;
+    std::vector<ProcessFileUtils::process *> processes;
     int index = 0;
-    ProccessFileUtils t;
-    ProccessFileUtils::process proc;
+    ProcessFileUtils t;
+    ProcessFileUtils::process proc;
     while(true) {
-        t.lockRecord(lfd, sizeof(struct ProccessFileUtils::process), index);
+        t.lockRecord(lfd, sizeof(struct ProcessFileUtils::process), index);
         int read = t.readRecord(lfd, &proc, index);
         if(read == 0 || read == -1) {
-            t.unlockRecord(lfd, sizeof(struct ProccessFileUtils::process), index);
+            t.unlockRecord(lfd, sizeof(struct ProcessFileUtils::process), index);
             break;
         }
         if(proc.taken == 0) {
@@ -58,7 +58,7 @@ std::vector<linda::ProccessFileUtils::process *> linda::MatchesFinder::returnPro
         if (PatternComparator::matches(tuple->pattern, pattern))
             processes.push_back(std::move(&proc));
         else
-            t.unlockRecord(lfd, sizeof(struct ProccessFileUtils::process), index);
+            t.unlockRecord(lfd, sizeof(struct ProcessFileUtils::process), index);
         ++index;
     }
     return std::move(processes);
