@@ -1,2 +1,0 @@
-/usr/bin/ar cr libLindaCommunicator.a  CMakeFiles/LindaCommunicator.dir/src/LindaCommunicator.cpp.o CMakeFiles/LindaCommunicator.dir/src/ProccessFileUtils.cpp.o CMakeFiles/LindaCommunicator.dir/src/TupleFileUtils.cpp.o CMakeFiles/LindaCommunicator.dir/src/pid.cpp.o
-/usr/bin/ranlib libLindaCommunicator.a
