@@ -1,11 +1,12 @@
 #ifndef LINDACOMMUNICATOR_SEARCHPROCESSFILE_H
 #define LINDACOMMUNICATOR_SEARCHPROCESSFILE_H
 
-#include "ProcessFileUtils.h"
+#include <ProcessFileUtils.h>
 
 namespace linda {
 
-    class SearchProcessFile {
+    class SearchProcessFile
+    {
     public:
         static int putProcess(int fd, ProcessFileUtils::process * processPtr);
     };

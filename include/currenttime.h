@@ -1,3 +1,5 @@
+#ifndef CURRENTTIME_H
+#define CURRENTTIME_H
 #include <sys/time.h>
 using namespace std;
 
@@ -13,4 +15,4 @@ long get_current_time()
 
     return milliseconds_since_epoch;
 }
-
+#endif // CURRENTTIME_H

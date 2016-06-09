@@ -14,9 +14,9 @@
 #include <TupleFileUtils.h>
 namespace linda
 {
-    static const std::string DEFAULT_FILEPATH = "";
+    static const std::string DEFAULT_FILEPATH = "/tmp/";
     static const int MAX_TUPLE_SIZE = 0;
-    static const std::string DEF_MES_FILE_PREF = "";
+    static const std::string DEF_MES_FILE_PREF = "lin_mes_";
     class LindaCommunicator
     {
         int searchFile();
@@ -26,16 +26,16 @@ namespace linda
         int removeTuple(unsigned int offset);
         void wakeProcess(pid_t pid);
         void wakeProcesses(int fd, linda::TupleFileUtils::tuple *tuple);
-        void sortQueue(std::vector<ProcessFileUtils::process>&);
+        void sortQueue(std::vector<ProcessFileUtils::process*>&);
         void findMatching(std::string pattern);
-        std::vector<Pid> queue;
+        TupleFileUtils::tuple read_(std::string, bool);
 
+        int fd;
 
     public:
         LindaCommunicator();
-        std::fstream tuples, pids, messages;
-        std::string read(std::string pattern);
-        std::string input(std::string pattern);
+        TupleFileUtils::tuple read(std::string pattern);
+        TupleFileUtils::tuple input(std::string pattern);
         void output(std::string tuple);
 
 

@@ -14,7 +14,7 @@ namespace linda {
     class TupleFileUtils {
     public:
         struct tuple {
-            char taken;
+            bool taken;
             int record_id;
             char pattern[99];
         };
@@ -33,6 +33,7 @@ namespace linda {
 
         static int setRecordTaken(int fd, int record_id, char taken);
     };
+
 
 }
 

@@ -1,3 +1,6 @@
+#include <signal.h>
+#include <bits/stringfwd.h>
+
 #include "ProcessFileUtils.h"
 
 
@@ -48,10 +51,30 @@ int linda::ProcessFileUtils::checkRecordTaken(int fd, int record_id) {
     }
 }
 
-int linda::ProcessFileUtils::setRecordTaken(int fd, int record_id, char taken) {
+int linda::ProcessFileUtils::setRecordTaken(int fd, int record_id, char taken)
+{
     lseek(fd, record_id * sizeof(process), 0);
     return write(fd, &taken, sizeof(char));
 }
 
+int linda::ProcessFileUtils::wakeupProcess(pid_t pid)
+{
+    return kill(pid, SIGUSR1);
+}
 
+bool linda::compProc(ProcessFileUtils::process* a, ProcessFileUtils::process*b)
+{
+    return *a < *b;
+}
 
+bool linda::ProcessFileUtils::process::operator<(const process &other) const
+{
+    return this->timestamp < other.timestamp;
+}
+
+int linda::ProcessFileUtils::findAndLock()
+{ }
+
+linda::ProcessFileUtils::process linda::ProcessFileUtils::process::initProcess(std::string pattern, bool input,
+                                                                               int rec_id)
+{ }
