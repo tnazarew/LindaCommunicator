@@ -8,12 +8,14 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-#        src/LindaCommunicator.cpp
-#        src/ProccessFileUtils.cpp
-#        src/ProccessFileUtils.h
-        src/TupleFileUtils.cpp
-        src/TupleFileUtils.h src/pid.cpp)
+      src/LindaCommunicator.cpp
+      src/ProccessFileUtils.cpp
+
+      src/TupleFileUtils.cpp
+        src/PatternComparator.cpp
+        src/MatchesFinder.cpp
+    )
 
 
 add_executable(main main.cpp)
-#target_link_libraries(main ${PROJECT_NAME})
+target_link_libraries(main ${PROJECT_NAME})

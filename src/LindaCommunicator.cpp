@@ -2,40 +2,44 @@
 // Created by tomasz on 07.06.16.
 //
 
-#include "LindaCommunicator.h"
-#include "ProccessFileUtils.h"
+#include <LindaCommunicator.h>
 
-#include <pid.h>
 #include <algorithm>
-void linda::LindaCommunicator::sortQueue(std::vector<Pid> &queue)
+#include <MatchesFinder.h>
+
+
+void linda::LindaCommunicator::sortQueue(std::vector<ProccessFileUtils::process> &queue)
 {
     std::sort(queue.begin(), queue.end());
 
 }
 
-void linda::LindaCommunicator::wakeProcesses(int fd, std::vector<struct process> pids)
+void linda::LindaCommunicator::wakeProcesses(int fd, linda::TupleFileUtils::tuple *tuple)
 {
+    std::vector<linda::ProccessFileUtils::process*> pids = linda::MatchesFinder::returnProcessQueue(tuple);
     bool input = false;
-    for (Pid pid: pids)
+    for (ProccessFileUtils::process* pid: pids)
     {
         if(!input)
         {
-            ProccessFileUtils::lockRecord(fd,sizeof(struct process), pid.record_id);
-            int a = ProccessFileUtils::checkRecordTaken(fd, pid.record_id);
-            if(a == 1)
+            int taken = ProccessFileUtils::checkRecordTaken(fd, pid->record_id);
+            if(taken == 1)
             {
-                struct process* ptr;
-                ProccessFileUtils::readRecord(fd, ptr, pid.record_id);
-                if(ptr->timestamp == pid.timestamp)
+                ProccessFileUtils::process* ptr;
+                ProccessFileUtils::readRecord(fd, ptr, pid->record_id);
+                if(ptr->timestamp == pid->timestamp)
                 {
                     ptr->found = 1;
-                    int writeRecord(int fd, struct process *process_ptr, int record_id);
-                    input = input?true:input;
+                    ProccessFileUtils::writeRecord(fd,  ptr, pid->record_id);
+                    int temp_fd = open((DEF_MES_FILE_PREF + std::to_string(pid->pid)).c_str(), O_RDWR|O_CREAT);
+                    TupleFileUtils::writeRecord(temp_fd, tuple, tuple->record_id);
+                    // TODO - ADD WAKEUP CALL
+                    input = ptr->flag?true:input;
                 }
 
             }
         }
-        ProccessFileUtils::unlockRecord(fd, sizeof(struct process), pid.record_id);
+        ProccessFileUtils::unlockRecord(fd, sizeof(ProccessFileUtils:: process), pid->record_id);
 
     }
 

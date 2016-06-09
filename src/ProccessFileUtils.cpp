@@ -1,4 +1,6 @@
-#include "ProccessFileUtils.h"
+#include <ProccessFileUtils.h>
+
+
 
 int linda::ProccessFileUtils::lockRecord(int fd, int length, int record_id) {
     struct flock lck;
@@ -49,10 +51,7 @@ int linda::ProccessFileUtils::setRecordTaken(int fd, int record_id, char taken) 
 }
 
 
-
-
-
-
-
-
-
+bool linda::ProccessFileUtils::process::operator<(const linda::ProccessFileUtils::process& other) const
+{
+    return timestamp > other.timestamp;
+}

@@ -10,8 +10,8 @@
 #include <pid.h>
 #include <tuple.h>
 #include <fstream>
-
-
+#include <ProccessFileUtils.h>
+#include <TupleFileUtils.h>
 namespace linda
 {
     static const std::string DEFAULT_FILEPATH = "";
@@ -25,8 +25,8 @@ namespace linda
         int removePID(unsigned int offset);
         int removeTuple(unsigned int offset);
         void wakeProcess(pid_t pid);
-        void wakeProcesses();
-        void sortQueue(std::vector<struct process>&);
+        void wakeProcesses(int fd, linda::TupleFileUtils::tuple *tuple);
+        void sortQueue(std::vector<ProccessFileUtils::process>&);
         void findMatching(std::string pattern);
         std::vector<Pid> queue;
 
