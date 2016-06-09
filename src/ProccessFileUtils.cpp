@@ -1,5 +1,5 @@
 #include "ProccessFileUtils.h"
-
+//*********************************************************************************************************************
 int linda::ProccessFileUtils::lockRecord(int fd, int length, int record_id) {
     struct flock lck;
     lck.l_type = F_WRLCK;
@@ -10,7 +10,7 @@ int linda::ProccessFileUtils::lockRecord(int fd, int length, int record_id) {
 
     return fcntl(fd, F_SETLKW, &lck);
 }
-
+//*********************************************************************************************************************
 int linda::ProccessFileUtils::unlockRecord(int fd, int length, int record_id) {
     struct flock lck;
     lck.l_type = F_UNLCK;
@@ -21,17 +21,17 @@ int linda::ProccessFileUtils::unlockRecord(int fd, int length, int record_id) {
 
     return fcntl(fd, F_SETLKW, &lck);
 }
-
+//*********************************************************************************************************************
 int linda::ProccessFileUtils::readRecord(int fd, struct process *process_ptr, int record_id) {
     lseek(fd, record_id * (sizeof(struct process)), 0);
     return read(fd, process_ptr, sizeof(struct process));
 }
-
+//*********************************************************************************************************************
 int linda::ProccessFileUtils::writeRecord(int fd, struct process *process_ptr, int record_id) {
     lseek(fd, record_id * (sizeof(struct process)), 0);
     return write(fd, process_ptr, sizeof(struct process));
 }
-
+//*********************************************************************************************************************
 int linda::ProccessFileUtils::checkRecordTaken(int fd, int record_id) {
     char flag;
     lseek(fd, record_id * sizeof(struct process), 0);
@@ -42,17 +42,17 @@ int linda::ProccessFileUtils::checkRecordTaken(int fd, int record_id) {
         return -1;
     }
 }
-
+//*********************************************************************************************************************
 int linda::ProccessFileUtils::setRecordTaken(int fd, int record_id, char taken) {
     lseek(fd, record_id * sizeof(struct process), 0);
     return write(fd, &taken, sizeof(char));
 }
-
-
-
-
-
-
+//*********************************************************************************************************************
+int linda::wakeupProcess(pid_t pid)
+{
+    return kill(pid, SIGUSR1);
+}
+//*********************************************************************************************************************
 
 
 
