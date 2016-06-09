@@ -7,19 +7,22 @@
 
 #include <string>
 
+
 namespace linda
 {
     struct Pid
     {
         unsigned long time;
         pid_t pid;
-        int imput;
-        unsigned int offset;
+        int empty;
+        int found;
+        int input;
+        int record_id;
         std::string pattern;
 
     public:
         //compare time
-        bool operator<(const Pid& other);
+        bool operator<(Pid& other);
     };
 }
 #endif //LINDACOMMUNICATOR_PID_H

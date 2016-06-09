@@ -16,7 +16,7 @@ namespace linda
 
         struct process {
             char taken;
-            char flag;
+            char found;
             time_t timestamp;
             pid_t pid;
             char pattern[99];

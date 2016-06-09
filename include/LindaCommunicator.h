@@ -11,6 +11,7 @@
 #include <tuple.h>
 #include <fstream>
 
+
 namespace linda
 {
     static const std::string DEFAULT_FILEPATH = "";
@@ -25,7 +26,7 @@ namespace linda
         int removeTuple(unsigned int offset);
         void wakeProcess(pid_t pid);
         void wakeProcesses();
-        void sortQueue();
+        void sortQueue(std::vector<struct process>&);
         void findMatching(std::string pattern);
         std::vector<Pid> queue;
 
