@@ -13,7 +13,7 @@
 namespace linda
 {
     class ProccessFileUtils {
-
+    public:
         struct process {
             char taken;
             char flag;
@@ -21,6 +21,8 @@ namespace linda
             pid_t pid;
             char pattern[99];
         };
+
+        ProccessFileUtils() {};
 
         int lockRecord(int fd, int length, int record_id);
 
@@ -34,6 +36,7 @@ namespace linda
 
         int setRecordTaken(int fd, int record_id, char taken);
     };
+
 }
 
 #endif //LINDACOMMUNICATOR_PROCCESSFILEUTILS_H

@@ -12,10 +12,13 @@
 
 namespace linda {
     class TupleFileUtils {
+    public:
         struct tuple {
             char taken;
             char pattern[99];
         };
+
+        TupleFileUtils() {};
 
         int lockRecord(int fd, int length, int record_id);
 
@@ -29,6 +32,7 @@ namespace linda {
 
         int setRecordTaken(int fd, int record_id, char taken);
     };
+
 }
 
 
