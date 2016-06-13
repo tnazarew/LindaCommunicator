@@ -2,12 +2,15 @@
 // Created by paulina on 09.06.16.
 //
 
+#include <linda_exception.h>
 #include "MatchesFinder.h"
 #include "PatternComparator.h"
 
 linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(linda::ProcessFileUtils::process *process) {
 
     int lfd = open("/tmp/linda_tuples.txt", O_RDWR | O_CREAT);
+    if(lfd == -1)
+        throw linda::LindaException();
     int index = 0;
     TupleFileUtils t;
     TupleFileUtils::tuple tu2;
@@ -39,6 +42,8 @@ linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(linda::Pr
 std::vector<linda::ProcessFileUtils::process *> linda::MatchesFinder::returnProcessQueue(linda::TupleFileUtils::tuple *tuple) {
 
     int lfd = open("/tmp/linda_proc.txt", O_RDWR | O_CREAT);
+    if(lfd == -1)
+        throw linda::LindaException();
     std::vector<ProcessFileUtils::process *> processes;
     int index = 0;
     ProcessFileUtils t;

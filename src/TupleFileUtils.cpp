@@ -1,3 +1,4 @@
+#include <linda_exception.h>
 #include "TupleFileUtils.h"
 
 int linda::TupleFileUtils::lockRecord(int fd, int length, int record_id)
@@ -7,9 +8,14 @@ int linda::TupleFileUtils::lockRecord(int fd, int length, int record_id)
     lck.l_whence = 0;
     lck.l_start = record_id * length;
     lck.l_len = length;
-    lck.l_pid = getpid();
+    const __pid_t t = lck.l_pid = getpid();
+    if(t==-1)
+        throw linda::LindaException();
 
-    return fcntl(fd, F_SETLKW, &lck);
+    const int i = fcntl(fd, F_SETLKW, &lck);
+    if(i == -1)
+        throw linda::LindaException();
+    return i;
 }
 
 int linda::TupleFileUtils::unlockRecord(int fd, int length, int record_id)
@@ -19,21 +25,32 @@ int linda::TupleFileUtils::unlockRecord(int fd, int length, int record_id)
     lck.l_whence = 0;
     lck.l_start = record_id * length;
     lck.l_len = length;
-    lck.l_pid = getpid();
-
+    const __pid_t t = lck.l_pid = getpid();
+    if(t==-1)
+        throw linda::LindaException();
     return fcntl(fd, F_SETLKW, &lck);
 }
 
 int linda::TupleFileUtils::readRecord(int fd, tuple *tuple_ptr, int record_id)
 {
-    lseek(fd, record_id * (sizeof(tuple)), 0);
-    return read(fd, tuple_ptr, sizeof(struct tuple));
+    const __off_t i = lseek(fd, record_id * (sizeof(tuple)), 0);
+    if(i== -1)
+        throw linda::LindaException();
+    const ssize_t i1 = read(fd, tuple_ptr, sizeof(struct tuple));
+    if(i1 == -1)
+        throw linda::LindaException();
+    return i1;
 }
 
 int linda::TupleFileUtils::writeRecord(int fd, tuple *tuple_ptr, int record_id)
 {
-    lseek(fd, record_id * (sizeof(tuple)), 0);
-    return write(fd, tuple_ptr, sizeof(tuple));
+    const __off_t i = lseek(fd, record_id * (sizeof(tuple)), 0);
+    if(i ==-1)
+        throw linda::LindaException();
+    const ssize_t i1 = write(fd, tuple_ptr, sizeof(tuple));
+    if(i1 == -1)
+        throw linda::LindaException();
+    return i1;
 }
 
 int linda::TupleFileUtils::checkRecordTaken(int fd, int record_id)
@@ -56,8 +73,13 @@ int linda::TupleFileUtils::checkRecordTaken(int fd, int record_id)
 
 int linda::TupleFileUtils::setRecordTaken(int fd, int record_id, char taken)
 {
-    lseek(fd, record_id * sizeof(struct tuple), 0);
-    return write(fd, &taken, sizeof(char));
+    const __off_t i = lseek(fd, record_id * sizeof(struct tuple), 0);
+    if(i==-1)
+        throw linda::LindaException();
+    const ssize_t i1 = write(fd, &taken, sizeof(char));
+    if(i1 == -1)
+        throw linda::LindaException();
+    return i1;
 }
 
 int linda::TupleFileUtils::findAndLock(int fd)

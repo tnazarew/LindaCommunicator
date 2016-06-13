@@ -167,26 +167,3 @@ bool linda::PatternComparator::notRightType(std::string &pattern, int &pattern_i
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -10,6 +10,7 @@
 #include <signals.h>
 
 #include <signal.h>
+#include <linda_exception.h>
 
 linda::LindaCommunicator::LindaCommunicator(std::string tuple_file, std::string process_file)
 {
@@ -20,20 +21,22 @@ linda::LindaCommunicator::LindaCommunicator(std::string tuple_file, std::string 
     sigset_t block_set;
 
     if(sigemptyset(&block_set) == -1)
-        std::cout << "Failed to empty set" << std::endl;
+        throw linda::LindaException("Failed to empty set");
 
     if(sigaddset(&block_set, SIGINT) == -1)
-        std::cout << "Failed to add int signal" << std::endl;
+        throw linda::LindaException("Failed to add int signal");
 
     if(sigprocmask(SIG_BLOCK, &block_set, NULL) == -1)
-        std::cout << "Failed to block SIGINT" << std::endl;
+        throw linda::LindaException("Failed to block SIGINT");
 
 }
 
 linda::LindaCommunicator::~LindaCommunicator()
 {
-    close(tuple_fd);
-    close(proc_fd);
+    if(close(tuple_fd)==-1)
+        throw linda::LindaException();
+    if(close(proc_fd)==-1)
+        throw linda::LindaException();
 }
 
 void linda::LindaCommunicator::sortQueue(std::vector<ProcessFileUtils::process *> &queue)
@@ -59,7 +62,8 @@ void linda::LindaCommunicator::wakeProcesses(int fd, linda::TupleFileUtils::tupl
             ProcessFileUtils::unlockRecord(fd, sizeof(*ptr), ptr->record_id);
             int temp_fd = open((DEF_MES_FILE_PREF + std::to_string(pid->pid)).c_str(), O_RDWR | O_CREAT);
             TupleFileUtils::writeRecord(temp_fd, tuple, tuple->record_id);
-            close(temp_fd);
+            if(close(temp_fd)==-1)
+                throw linda::LindaException();
             wakeProcess(pid->pid);
             input = ptr->flag ? true : input;
 
@@ -133,6 +137,8 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
         linda::ExecuteThisThingThatWillSuspendProcesUntilItGetsSIGUSR1Signal();
     }
     int new_fd = open((DEF_MES_FILE_PREF + std::to_string(proc.pid)).c_str(), O_RDWR | O_CREAT);
+    if(new_fd == -1)
+        throw linda::LindaException();
     TupleFileUtils::tuple *mes_t;
     TupleFileUtils::readRecord(new_fd, mes_t, 0);
 
@@ -146,6 +152,8 @@ void linda::ProcessFileUtils::process::initProcess(const string &pattern, bool i
     proc.flag = input;
     proc.found = false;
     proc.pid = getpid();
+    if(proc.pid == -1)
+        throw linda::LindaException();
     proc.record_id = rec_id;
     proc.taken = true;
     strcpy(proc.pattern, pattern.c_str());

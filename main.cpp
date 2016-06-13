@@ -5,52 +5,23 @@
 #include "ProcessFileUtils.h"
 #include <TupleFileUtils.h>
 #include <MatchesFinder.h>
+#include <LindaCommunicator.h>
 
 using namespace linda;
 
-int main()
+int main(int argc, char** argv)
 {
-    int lfd = open("/tmp/linda_tuples.txt", O_RDWR | O_CREAT);
-    int pfd = open("/tmp/linda_proc.txt", O_RDWR | O_CREAT);
-    ProcessFileUtils::process pr;
-    TupleFileUtils::tuple tu;
-    std::string tuple_pattern = "1,\"abc\",3.1415,\"e\"";
-    std::string process_pattern = "i:1,s:\"abc\",f:*,s:>\"d\"";
-
-    ProcessFileUtils p;
-    TupleFileUtils t;
-
-    strcpy(pr.pattern, process_pattern.c_str());
-    pr.pid = 1;
-    pr.flag = 1;
-    pr.taken = 1;
-    pr.timestamp = time(NULL);
-    for(int i = 0; i < 10; ++i) {
-        p.lockRecord(pfd, sizeof(struct ProcessFileUtils::process), i);
-        p.writeRecord(pfd, &pr, i);
-        p.unlockRecord(pfd, sizeof(struct ProcessFileUtils::process), i);
+    if(argc > 1)
+    {
+        linda::LindaCommunicator com("tuple_test", "proc_test");
+        linda::TupleFileUtils::tuple t;
+        std::string first(argv[1]);
+        if(first == "input")
+            t = com.input(std::string(argv[2]));
+        else if(first == "output")
+            com.output(std::string(argv[2]));
+        else if(first == "read")
+            t = com.read(std::string(argv[2]));
     }
-
-    strcpy(tu.pattern, tuple_pattern.c_str());
-    tu.taken = 1;
-
-    for(int i = 0; i < 10; ++i) {
-        t.lockRecord(lfd, sizeof(struct TupleFileUtils::tuple), i);
-        t.writeRecord(lfd, &tu, i);
-        t.unlockRecord(lfd, sizeof(struct TupleFileUtils::tuple), i);
-    }
-
-    TupleFileUtils::tuple* foundTuple = MatchesFinder::returnBlockedTuple(&pr);
-
-
-    std::vector<ProcessFileUtils::process *> processes = MatchesFinder::returnProcessQueue(foundTuple);
-
-    int fd = open("filename", O_RDWR|O_CREAT);
-    TupleFileUtils::tuple tuple;
-
-    close(fd);
-
-
-
     return 0;
 }
