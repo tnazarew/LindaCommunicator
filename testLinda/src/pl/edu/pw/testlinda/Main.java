@@ -1,7 +1,5 @@
 package pl.edu.pw.testlinda;
 
-import pl.edu.pw.testlinda.tests.Test1;
-
 import java.util.ArrayList;
 
 public class Main {
@@ -13,8 +11,11 @@ public class Main {
 
         ArrayList<Test> tests = new ArrayList<>();
         tests.add(new Test1(100));
+        tests.add(new Test2(100));
+        tests.add(new Test3(100, 100));
 
         for (Test test : tests) {
+            System.out.println("----------------------------------------------------");
             System.out.println("Running " + test.testName);
             System.out.println(test.description);
 

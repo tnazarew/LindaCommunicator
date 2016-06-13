@@ -52,8 +52,8 @@ public abstract class Test {
     public class Result {
 
         public int finished;
-        int waiting;
-        int error;
+        public int waiting;
+        public int error;
 
         Result ()
         {

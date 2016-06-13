@@ -7,7 +7,7 @@ public class LindaInstanceStruct {
     String error;
     Process process;
 
-    LindaInstanceStruct(LindaTypeEnum en, String pattern)
+    public LindaInstanceStruct(LindaTypeEnum en, String pattern)
     {
         lindaTypeEnum = en;
         this.pattern = pattern;
