@@ -34,9 +34,9 @@ linda::LindaCommunicator::LindaCommunicator(std::string tuple_file, std::string 
 linda::LindaCommunicator::~LindaCommunicator()
 {
     if(close(tuple_fd)==-1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     if(close(proc_fd)==-1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
 }
 
 void linda::LindaCommunicator::sortQueue(std::vector<ProcessFileUtils::process *> &queue)
@@ -63,7 +63,7 @@ void linda::LindaCommunicator::wakeProcesses(int fd, linda::TupleFileUtils::tupl
             int temp_fd = open((DEF_MES_FILE_PREF + std::to_string(pid->pid)).c_str(), O_RDWR | O_CREAT);
             TupleFileUtils::writeRecord(temp_fd, tuple, tuple->record_id);
             if(close(temp_fd)==-1)
-                throw linda::LindaException();
+                throw linda::LindaException("");
             wakeProcess(pid->pid);
             input = ptr->flag ? true : input;
 
@@ -138,7 +138,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
     }
     int new_fd = open((DEF_MES_FILE_PREF + std::to_string(proc.pid)).c_str(), O_RDWR | O_CREAT);
     if(new_fd == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     TupleFileUtils::tuple *mes_t;
     TupleFileUtils::readRecord(new_fd, mes_t, 0);
 
@@ -153,7 +153,7 @@ void linda::ProcessFileUtils::process::initProcess(const string &pattern, bool i
     proc.found = false;
     proc.pid = getpid();
     if(proc.pid == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     proc.record_id = rec_id;
     proc.taken = true;
     strcpy(proc.pattern, pattern.c_str());

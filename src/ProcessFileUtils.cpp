@@ -27,27 +27,27 @@ int linda::ProcessFileUtils::unlockRecord(int fd, int length, int record_id) {
     lck.l_pid = getpid();
     int res = fcntl(fd, F_SETLKW, &lck);
     if(res == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return res;
 }
 
 int linda::ProcessFileUtils::readRecord(int fd, process *process_ptr, int record_id) {
     const __off_t i = lseek(fd, record_id * (sizeof(process)), 0);
     if(i == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     int res = read(fd, process_ptr, sizeof(process));
     if(res == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return res;
 }
 
 int linda::ProcessFileUtils::writeRecord(int fd, process *process_ptr, int record_id) {
     const __off_t i = lseek(fd, record_id * (sizeof(process)), 0);
     if(i == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     int res = write(fd, process_ptr, sizeof(process));
     if(res == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return res;
 }
 
@@ -55,7 +55,7 @@ int linda::ProcessFileUtils::checkRecordTaken(int fd, int record_id) {
     char flag;
     const __off_t i = lseek(fd, record_id * sizeof(process), 0);
     if(i ==-1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     if (int res = read(fd, &flag, sizeof(char)) > 0) {
         return flag;
     }
@@ -71,7 +71,7 @@ int linda::ProcessFileUtils::setRecordTaken(int fd, int record_id, char taken)
 {
     const __off_t i = lseek(fd, record_id * sizeof(process), 0);
     if(i == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     const ssize_t i1 = write(fd, &taken, sizeof(char));
     if(i1 == -1)
     return i1;
@@ -81,7 +81,7 @@ int linda::ProcessFileUtils::wakeupProcess(pid_t pid)
 {
     const int i = kill(pid, SIGUSR1);
     if(i == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return i;
 }
 

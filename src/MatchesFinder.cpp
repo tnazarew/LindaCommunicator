@@ -10,7 +10,7 @@ linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(linda::Pr
 
     int lfd = open("/tmp/linda_tuples.txt", O_RDWR | O_CREAT);
     if(lfd == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     int index = 0;
     TupleFileUtils t;
     TupleFileUtils::tuple tu2;
@@ -43,7 +43,7 @@ std::vector<linda::ProcessFileUtils::process *> linda::MatchesFinder::returnProc
 
     int lfd = open("/tmp/linda_proc.txt", O_RDWR | O_CREAT);
     if(lfd == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     std::vector<ProcessFileUtils::process *> processes;
     int index = 0;
     ProcessFileUtils t;

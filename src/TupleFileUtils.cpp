@@ -10,11 +10,11 @@ int linda::TupleFileUtils::lockRecord(int fd, int length, int record_id)
     lck.l_len = length;
     const __pid_t t = lck.l_pid = getpid();
     if(t==-1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
 
     const int i = fcntl(fd, F_SETLKW, &lck);
     if(i == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return i;
 }
 
@@ -27,7 +27,7 @@ int linda::TupleFileUtils::unlockRecord(int fd, int length, int record_id)
     lck.l_len = length;
     const __pid_t t = lck.l_pid = getpid();
     if(t==-1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return fcntl(fd, F_SETLKW, &lck);
 }
 
@@ -35,10 +35,10 @@ int linda::TupleFileUtils::readRecord(int fd, tuple *tuple_ptr, int record_id)
 {
     const __off_t i = lseek(fd, record_id * (sizeof(tuple)), 0);
     if(i== -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     const ssize_t i1 = read(fd, tuple_ptr, sizeof(struct tuple));
     if(i1 == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return i1;
 }
 
@@ -46,10 +46,10 @@ int linda::TupleFileUtils::writeRecord(int fd, tuple *tuple_ptr, int record_id)
 {
     const __off_t i = lseek(fd, record_id * (sizeof(tuple)), 0);
     if(i ==-1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     const ssize_t i1 = write(fd, tuple_ptr, sizeof(tuple));
     if(i1 == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return i1;
 }
 
@@ -75,10 +75,10 @@ int linda::TupleFileUtils::setRecordTaken(int fd, int record_id, char taken)
 {
     const __off_t i = lseek(fd, record_id * sizeof(struct tuple), 0);
     if(i==-1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     const ssize_t i1 = write(fd, &taken, sizeof(char));
     if(i1 == -1)
-        throw linda::LindaException();
+        throw linda::LindaException("");
     return i1;
 }
 
