@@ -13,12 +13,8 @@ add_library(${PROJECT_NAME}
         src/TupleFileUtils.cpp
         src/PatternComparator.cpp
         src/MatchesFinder.cpp
-        src/LindaCommunicator.cpp
-        src/ProcessFileUtils.cpp
-        src/TupleFileUtils.cpp
         src/SearchProcessFile.cpp
-        src/signals.cpp
-        include/signals.h)
+        src/signals.cpp)
 
 
 add_executable(main main.cpp)

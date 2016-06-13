@@ -17,7 +17,7 @@ linda::LindaCommunicator::LindaCommunicator(std::string tuple_file, std::string 
     tuple_fd = open((DEFAULT_FILEPATH+tuple_file).c_str(), O_RDWR|O_CREAT);
     proc_fd = open((DEFAULT_FILEPATH+process_file).c_str(), O_RDWR|O_CREAT);
     //blokowanie sygnałów
-    std::cout << getpid() << std::endl;
+//    std::cout << getpid() << std::endl;
     sigset_t block_set;
 
     if(sigemptyset(&block_set) == -1)
@@ -47,7 +47,7 @@ void linda::LindaCommunicator::sortQueue(std::vector<ProcessFileUtils::process *
 
 void linda::LindaCommunicator::wakeProcesses(int fd, linda::TupleFileUtils::tuple *tuple)
 {
-    std::vector<linda::ProcessFileUtils::process *> pids = linda::MatchesFinder::returnProcessQueue(tuple);
+    std::vector<linda::ProcessFileUtils::process *> pids = linda::MatchesFinder::returnProcessQueue(proc_fd, tuple);
     sortQueue(pids);
     bool input = false;
     for (ProcessFileUtils::process *pid: pids)
@@ -64,7 +64,7 @@ void linda::LindaCommunicator::wakeProcesses(int fd, linda::TupleFileUtils::tupl
             TupleFileUtils::writeRecord(temp_fd, tuple, tuple->record_id);
             if(close(temp_fd)==-1)
                 throw linda::LindaException("");
-            wakeProcess(pid->pid);
+            ProcessFileUtils::wakeupProcess(pid->pid);
             input = ptr->flag ? true : input;
 
         }
@@ -108,7 +108,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
     proc.initProcess(pattern, input, rec_id); // towrzymy strukture
     ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id); //wpisuje w obszar
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id); //zwlania
-    TupleFileUtils::tuple *t = MatchesFinder::returnBlockedTuple(&proc); // znajduje krotke dla wybranego procesu
+    TupleFileUtils::tuple *t = MatchesFinder::returnBlockedTuple(tuple_fd, &proc); // znajduje krotke dla wybranego procesu
     ProcessFileUtils::lockRecord(proc_fd, sizeof(proc), proc.record_id); // blokuje obszar
     if (t) // krotka znaleziona
     {

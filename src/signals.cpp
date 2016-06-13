@@ -4,10 +4,11 @@
 
 #include <iostream>
 #include <signal.h>
+#include <signals.h>
 #include <linda_exception.h>
 
 
-void ExecuteThisThingThatWillSuspendProcesUntilItGetsSIGUSR1Signal()
+void linda::ExecuteThisThingThatWillSuspendProcesUntilItGetsSIGUSR1Signal()
 {
     sigset_t suspend_set;
     const int i = sigfillset(&suspend_set);

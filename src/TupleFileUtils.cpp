@@ -14,7 +14,7 @@ int linda::TupleFileUtils::lockRecord(int fd, int length, int record_id)
 
     const int i = fcntl(fd, F_SETLKW, &lck);
     if(i == -1)
-        throw linda::LindaException("");
+        throw linda::LindaException(std::string("TupleFileUtils::lockRecord fcntl failed| Errno: ") + strerror(errno));
     return i;
 }
 
