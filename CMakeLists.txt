@@ -17,7 +17,8 @@ add_library(${PROJECT_NAME}
         src/ProcessFileUtils.cpp
         src/TupleFileUtils.cpp
         src/SearchProcessFile.cpp
-        )
+        src/signals.cpp
+        include/signals.h)
 
 
 add_executable(main main.cpp)

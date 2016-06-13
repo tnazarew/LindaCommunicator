@@ -32,6 +32,8 @@ namespace linda {
         static int checkRecordTaken(int fd, int record_id);
 
         static int setRecordTaken(int fd, int record_id, char taken);
+
+        static int findAndLock(int fd);
     };
 
 

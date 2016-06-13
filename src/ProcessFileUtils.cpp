@@ -1,5 +1,6 @@
 #include <signal.h>
 #include <bits/stringfwd.h>
+#include <SearchProcessFile.h>
 
 #include "ProcessFileUtils.h"
 
@@ -72,9 +73,19 @@ bool linda::ProcessFileUtils::process::operator<(const process &other) const
     return this->timestamp < other.timestamp;
 }
 
-int linda::ProcessFileUtils::findAndLock()
-{ }
+int linda::ProcessFileUtils::findAndLock(int fd)
+{
 
-linda::ProcessFileUtils::process linda::ProcessFileUtils::process::initProcess(std::string pattern, bool input,
-                                                                               int rec_id)
-{ }
+    int rec_id=0;
+    while(true)
+    {
+        ProcessFileUtils::lockRecord(fd, sizeof(ProcessFileUtils::process), rec_id);
+        if(!ProcessFileUtils::checkRecordTaken(fd, rec_id))
+        {
+            return rec_id;
+        }
+        ProcessFileUtils::unlockRecord(fd, sizeof(ProcessFileUtils::process), rec_id);
+        rec_id ++;
+    }
+}
+

@@ -30,10 +30,12 @@ namespace linda
         void findMatching(std::string pattern);
         TupleFileUtils::tuple read_(std::string, bool);
 
-        int fd;
+        int tuple_fd, proc_fd;
+
 
     public:
-        LindaCommunicator();
+        LindaCommunicator(std::string tuple_file, std::string proc_file);
+        ~LindaCommunicator();
         TupleFileUtils::tuple read(std::string pattern);
         TupleFileUtils::tuple input(std::string pattern);
         void output(std::string tuple);

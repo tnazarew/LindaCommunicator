@@ -50,7 +50,7 @@ std::vector<linda::ProcessFileUtils::process *> linda::MatchesFinder::returnProc
             t.unlockRecord(lfd, sizeof(struct ProcessFileUtils::process), index);
             break;
         }
-        if(proc.taken == 0) {
+        if(proc.taken == 0 || proc.found == 1) {
             ++index;
             continue;
         }
