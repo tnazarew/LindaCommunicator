@@ -14,8 +14,8 @@
 
 linda::LindaCommunicator::LindaCommunicator(std::string tuple_file, std::string process_file)
 {
-    tuple_fd = open((DEFAULT_FILEPATH+tuple_file).c_str(), O_RDWR|O_CREAT);
-    proc_fd = open((DEFAULT_FILEPATH+process_file).c_str(), O_RDWR|O_CREAT);
+    tuple_fd = open((DEFAULT_FILEPATH+tuple_file).c_str(), O_RDWR|O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    proc_fd = open((DEFAULT_FILEPATH+process_file).c_str(), O_RDWR|O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     //blokowanie sygnałów
 //    std::cout << getpid() << std::endl;
     sigset_t block_set;
@@ -156,7 +156,8 @@ void linda::ProcessFileUtils::process::initProcess(const string &pattern, bool i
         throw linda::LindaException("");
     proc.record_id = rec_id;
     proc.taken = true;
-    strcpy(proc.pattern, pattern.c_str());
+    pattern.copy(proc.pattern, pattern.size());
+    std::cout << proc.pattern << std::endl;
 }
 
 

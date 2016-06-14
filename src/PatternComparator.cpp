@@ -3,13 +3,14 @@
 //
 
 #include <algorithm>
+#include <iostream>
 #include "PatternComparator.h"
 
 bool linda::PatternComparator::matches(std::string tuple, std::string pattern) {
     int tuple_index = 0, pattern_index = 0;
     int tuple_size = tuple.size();
     int pattern_size = pattern.size();
-
+    std::cout << pattern << std::endl;
     while(tuple_index < tuple_size && pattern_index < pattern_size) {
         std::string tuple_val = "";
 
