@@ -8,7 +8,6 @@
 
 
 int  linda::ProcessFileUtils::lockRecord(int fd, int length, int record_id) {
-    std::cout << "lock file_des: " << fd << " record: " << record_id << std::endl;
     struct flock lck;
     lck.l_type = F_WRLCK;
     lck.l_whence = 0;
@@ -16,11 +15,11 @@ int  linda::ProcessFileUtils::lockRecord(int fd, int length, int record_id) {
     lck.l_len = length;
     lck.l_pid = getpid();
 
+    std::cout << "process lock: " << record_id << std::endl;
     return fcntl(fd, F_SETLKW, &lck);
 }
 
 int linda::ProcessFileUtils::unlockRecord(int fd, int length, int record_id) {
-    std::cout << "unlock file_des: " << fd << " record: " << record_id << std::endl;
     struct flock lck;
     lck.l_type = F_UNLCK;
     lck.l_whence = 0;
@@ -30,6 +29,7 @@ int linda::ProcessFileUtils::unlockRecord(int fd, int length, int record_id) {
     int res = fcntl(fd, F_SETLKW, &lck);
     if(res == -1)
         throw linda::LindaException("");
+    std::cout << "process unlock: " <<  record_id << std::endl;
     return res;
 }
 

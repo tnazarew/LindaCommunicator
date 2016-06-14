@@ -42,7 +42,8 @@ int main(int argc, char** argv)
             std::cerr << "Unknown but very bad error";
         }
 
-
+        std::cout<<std::endl;
     }
+    int jou = 0;
     return 0;
 }

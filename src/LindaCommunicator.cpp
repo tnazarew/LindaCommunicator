@@ -45,42 +45,40 @@ void linda::LindaCommunicator::sortQueue(std::vector<ProcessFileUtils::process> 
 
 }
 
-void linda::LindaCommunicator::wakeProcesses(int fd, linda::TupleFileUtils::tuple *tuple)
+void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple)
 {
     std::vector<linda::ProcessFileUtils::process> pids = linda::MatchesFinder::returnProcessQueue(proc_fd, tuple);
     sortQueue(pids);
     bool input = false;
-    for (ProcessFileUtils::process pid: pids)
-    {
-        if (!input)
-        {
-
+    for (ProcessFileUtils::process pid: pids) {
+        if(!input) {
             ProcessFileUtils::process ptr;
-            ProcessFileUtils::readRecord(fd, &ptr, pid.record_id);
+            ProcessFileUtils::readRecord(proc_fd, &ptr, pid.record_id);
             ptr.found = 1;
             ptr.taken = 0;
-            ProcessFileUtils::writeRecord(fd, &ptr, pid.record_id);
-            ProcessFileUtils::unlockRecord(fd, sizeof(ptr), ptr.record_id);
-            int temp_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(pid.pid)).c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-            TupleFileUtils::lockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
-            tuple->taken = 0;
-            TupleFileUtils::writeRecord(tuple_fd, tuple, tuple->record_id);
-            TupleFileUtils::unlockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
+            ProcessFileUtils::writeRecord(proc_fd, &ptr, pid.record_id);
+            ProcessFileUtils::unlockRecord(proc_fd, sizeof(ptr), ptr.record_id);
+            int temp_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(pid.pid)).c_str(), O_RDWR | O_CREAT,
+                               S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 
-            if(close(temp_fd)==-1)
+            if (close(temp_fd) == -1) {
+                TupleFileUtils::unlockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
                 throw linda::LindaException("");
+            }
 
             ProcessFileUtils::wakeupProcess(pid.pid);
-            input = ptr.flag ? true : input;
-
+            if (ptr.flag) {
+                tuple->taken = 0;
+                TupleFileUtils::writeRecord(tuple_fd, tuple, tuple->record_id);
+                input = true;
+            }
         }
         else
         {
-            ProcessFileUtils::unlockRecord(fd, sizeof(pid), pid.record_id);
+            ProcessFileUtils::unlockRecord(proc_fd, sizeof(pid), pid.record_id);
         }
-
     }
-
+    TupleFileUtils::unlockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
 }
 
 linda::TupleFileUtils::tuple linda::LindaCommunicator::input(std::string pattern)
@@ -98,13 +96,13 @@ void linda::LindaCommunicator::output(std::string tuple)
     int rec_id = TupleFileUtils::findAndLock(tuple_fd);
     TupleFileUtils::tuple t;
     t.record_id = rec_id;
-    tuple.copy(t.pattern, tuple.size()+1);
-    t.pattern[tuple.size()+1] = '\0';
+    tuple.copy(t.pattern, tuple.size());
+    t.pattern[tuple.size()] = '\0';
     t.taken = true;
 
     TupleFileUtils::writeRecord(tuple_fd, &t, rec_id);
 
-    wakeProcesses(proc_fd, &t);
+    wakeProcesses(&t);
 
 
 }
@@ -129,13 +127,15 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
         }
         else // nie znaleziono dla nas krotki, nasza jest tą jedyną
         {
-            if (proc.flag) // nikt już nam jej nie zabierze
+            if (proc.flag) // input
             {
                 t.taken = false;
                 TupleFileUtils::writeRecord(tuple_fd, &t, t.record_id);
             }
-            TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
+            proc.taken = false;
+            ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
             ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
+            TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
             return t;
         }
     }
