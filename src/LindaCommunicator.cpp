@@ -55,7 +55,6 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
             ProcessFileUtils::process ptr;
             ProcessFileUtils::readRecord(proc_fd, &ptr, pid.record_id);
             ptr.found = 1;
-            ptr.taken = 0;
             ProcessFileUtils::writeRecord(proc_fd, &ptr, pid.record_id);
             ProcessFileUtils::unlockRecord(proc_fd, sizeof(ptr), ptr.record_id);
             int temp_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(pid.pid)).c_str(), O_RDWR | O_CREAT,
@@ -68,8 +67,6 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
 
             ProcessFileUtils::wakeupProcess(pid.pid);
             if (ptr.flag) {
-                tuple->taken = 0;
-                TupleFileUtils::writeRecord(tuple_fd, tuple, tuple->record_id);
                 input = true;
             }
         }
@@ -148,7 +145,12 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
     }
     int new_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(proc.pid)).c_str(),O_RDWR , S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if(new_fd == -1)
-        throw linda::LindaException("");
+        throw linda::LindaException("Unable to open auxiliary file");
+
+    ProcessFileUtils::lockRecord(proc_fd, sizeof(proc), rec_id);
+    ProcessFileUtils::setRecordTaken(proc_fd, rec_id, false);
+    ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), rec_id);
+
     TupleFileUtils::tuple mes_t;
     TupleFileUtils::readRecord(new_fd, &mes_t, 0);
 
@@ -163,7 +165,7 @@ void linda::ProcessFileUtils::process::initProcess(const string &pattern_, bool 
     found = false;
     pid = getpid();
     if(pid == -1)
-        throw linda::LindaException("");
+        throw linda::LindaException("Getpid failed");
     record_id = rec_id;
     taken = true;
     pattern_.copy(pattern, pattern_.size()+1);
