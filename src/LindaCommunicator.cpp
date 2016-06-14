@@ -121,6 +121,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
         if (proc.found) //inny proces znalazł juz krotke dla naszego procesu
         {
             proc.taken = false;
+            ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
             ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
             TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
             linda::ExecuteThisThingThatWillSuspendProcesUntilItGetsSIGUSR1Signal();
