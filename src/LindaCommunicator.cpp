@@ -93,7 +93,8 @@ void linda::LindaCommunicator::output(std::string tuple)
     int rec_id = TupleFileUtils::findAndLock(tuple_fd);
     TupleFileUtils::tuple t;
     t.record_id = rec_id;
-    strcpy(t.pattern, tuple.c_str());
+    tuple.copy(t.pattern, tuple.size()+1);
+    t.pattern[tuple.size()+1] = '\0';
     t.taken = true;
 
     TupleFileUtils::writeRecord(tuple_fd, &t, rec_id);
@@ -158,7 +159,7 @@ void linda::ProcessFileUtils::process::initProcess(const string &pattern_, bool 
         throw linda::LindaException("");
     record_id = rec_id;
     taken = true;
-    pattern_.copy(pattern, pattern_.size());
+    pattern_.copy(pattern, pattern_.size()+1);
     std::cout << pattern << std::endl;
 }
 

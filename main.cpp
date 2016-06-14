@@ -6,6 +6,7 @@
 #include <TupleFileUtils.h>
 #include <MatchesFinder.h>
 #include <LindaCommunicator.h>
+#include <linda_exception.h>
 
 using namespace linda;
 
@@ -16,18 +17,28 @@ int main(int argc, char** argv)
         linda::LindaCommunicator com("tuple_test", "proc_test");
         linda::TupleFileUtils::tuple t;
         std::string first(argv[1]);
-        if(first == "input")
+        try
         {
-            t = com.input(std::string(argv[2]));
-            std::cout << t.pattern << std::endl;
+            if(first == "input")
+            {
+                t = com.input(std::string(argv[2]));
+                std::cout << t.pattern << std::endl;
+            }
+            else if(first == "output")
+                com.output(std::string(argv[2]));
+            else if(first == "read")
+            {
+                t = com.read(std::string(argv[2]));
+                std::cout << t.pattern << std::endl;
+            }
         }
-        else if(first == "output")
-            com.output(std::string(argv[2]));
-        else if(first == "read")
+        catch (LindaException& l)
         {
-            t = com.read(std::string(argv[2]));
-            std::cout << t.pattern << std::endl;
+            std::cerr << l.what();
+            return -1;
         }
+
+
     }
     return 0;
 }

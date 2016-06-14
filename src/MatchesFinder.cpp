@@ -67,8 +67,8 @@ std::vector<linda::ProcessFileUtils::process> linda::MatchesFinder::returnProces
             ++index;
             continue;
         }
-        std::string pattern(proc.pattern);
-        if (PatternComparator::matches(tuple->pattern, pattern))
+
+        if (PatternComparator::matches(tuple->pattern, proc.pattern))
             processes.push_back(proc);
         else
             t.unlockRecord(fd, sizeof(struct ProcessFileUtils::process), index);
