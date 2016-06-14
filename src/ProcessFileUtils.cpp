@@ -8,6 +8,7 @@
 
 
 int  linda::ProcessFileUtils::lockRecord(int fd, int length, int record_id) {
+    std::cout << "lock file_des: " << fd << " record: " << record_id << std::endl;
     struct flock lck;
     lck.l_type = F_WRLCK;
     lck.l_whence = 0;
@@ -19,6 +20,7 @@ int  linda::ProcessFileUtils::lockRecord(int fd, int length, int record_id) {
 }
 
 int linda::ProcessFileUtils::unlockRecord(int fd, int length, int record_id) {
+    std::cout << "unlock file_des: " << fd << " record: " << record_id << std::endl;
     struct flock lck;
     lck.l_type = F_UNLCK;
     lck.l_whence = 0;
@@ -37,7 +39,7 @@ int linda::ProcessFileUtils::readRecord(int fd, process *process_ptr, int record
         throw linda::LindaException("");
     int res = read(fd, process_ptr, sizeof(process));
     if(res == -1)
-        throw linda::LindaException("");
+        throw linda::LindaException(strerror(errno));
     return res;
 }
 
@@ -81,7 +83,7 @@ int linda::ProcessFileUtils::wakeupProcess(pid_t pid)
 {
     const int i = kill(pid, SIGUSR1);
     if(i == -1)
-        throw linda::LindaException("");
+        throw linda::LindaException(strerror(errno));
     return i;
 }
 

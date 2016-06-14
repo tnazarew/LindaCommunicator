@@ -17,11 +17,17 @@ int main(int argc, char** argv)
         linda::TupleFileUtils::tuple t;
         std::string first(argv[1]);
         if(first == "input")
+        {
             t = com.input(std::string(argv[2]));
+            std::cout << t.pattern << std::endl;
+        }
         else if(first == "output")
             com.output(std::string(argv[2]));
         else if(first == "read")
+        {
             t = com.read(std::string(argv[2]));
+            std::cout << t.pattern << std::endl;
+        }
     }
     return 0;
 }

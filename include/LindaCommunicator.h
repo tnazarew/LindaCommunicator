@@ -26,7 +26,7 @@ namespace linda
         int removeTuple(unsigned int offset);
         void wakeProcess(pid_t pid);
         void wakeProcesses(int fd, linda::TupleFileUtils::tuple *tuple);
-        void sortQueue(std::vector<ProcessFileUtils::process*>&);
+        void sortQueue(std::vector<ProcessFileUtils::process>&);
         void findMatching(std::string pattern);
         TupleFileUtils::tuple read_(std::string, bool);
 

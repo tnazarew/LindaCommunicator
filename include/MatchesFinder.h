@@ -15,8 +15,8 @@ namespace linda {
 
     class MatchesFinder {
     public:
-        static TupleFileUtils::tuple* returnBlockedTuple(int fd, ProcessFileUtils::process* process );
-        static std::vector<ProcessFileUtils::process *> returnProcessQueue(int fd, TupleFileUtils::tuple* tuple);
+        static TupleFileUtils::tuple returnBlockedTuple(int fd, ProcessFileUtils::process* process );
+        static std::vector<ProcessFileUtils::process> returnProcessQueue(int fd, TupleFileUtils::tuple *tuple);
     };
 }
 

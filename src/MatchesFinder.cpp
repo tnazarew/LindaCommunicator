@@ -6,7 +6,7 @@
 #include "MatchesFinder.h"
 #include "PatternComparator.h"
 
-linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(int fd, linda::ProcessFileUtils::process *process) {
+linda::TupleFileUtils::tuple linda::MatchesFinder::returnBlockedTuple(int fd, linda::ProcessFileUtils::process *process) {
 
 
     if(fd == -1)
@@ -21,17 +21,24 @@ linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(int fd, l
             t.unlockRecord(fd, sizeof(struct TupleFileUtils::tuple), index);
             break;
         }
-        if(tu2.taken == 0) {
+        if(tu2.taken == 0)
+        {
+            TupleFileUtils::unlockRecord(fd, sizeof(TupleFileUtils::tuple), index);
             ++index;
             continue;
         }
         std::string pattern(tu2.pattern);
         if (PatternComparator::matches(pattern, process->pattern))
-            return std::move(&tu2);
+            return tu2;
         t.unlockRecord(fd, sizeof(struct TupleFileUtils::tuple), index);
         ++index;
     }
-    return nullptr;/*
+    TupleFileUtils::tuple tt;
+    tt.taken = false;
+    tt.record_id = -1;
+    return tt;
+//    return nullptr;
+    /*
     TupleFileUtils t;
     TupleFileUtils::tuple tu, tu2;
     t.lockRecord(lfd, sizeof(struct TupleFileUtils::tuple), 0);
@@ -39,12 +46,13 @@ linda::TupleFileUtils::tuple *linda::MatchesFinder::returnBlockedTuple(int fd, l
     t.unlockRecord(lfd, sizeof(struct TupleFileUtils::tuple), 0);*/
 }
 
-std::vector<linda::ProcessFileUtils::process *> linda::MatchesFinder::returnProcessQueue(int fd, linda::TupleFileUtils::tuple *tuple) {
+std::vector<linda::ProcessFileUtils::process> linda::MatchesFinder::returnProcessQueue(int fd,
+                                                                                         linda::TupleFileUtils::tuple *tuple) {
 
 
     if(fd == -1)
         throw linda::LindaException("");
-    std::vector<ProcessFileUtils::process *> processes;
+    std::vector<ProcessFileUtils::process> processes;
     int index = 0;
     ProcessFileUtils t;
     ProcessFileUtils::process proc;
@@ -61,12 +69,12 @@ std::vector<linda::ProcessFileUtils::process *> linda::MatchesFinder::returnProc
         }
         std::string pattern(proc.pattern);
         if (PatternComparator::matches(tuple->pattern, pattern))
-            processes.push_back(std::move(&proc));
+            processes.push_back(proc);
         else
             t.unlockRecord(fd, sizeof(struct ProcessFileUtils::process), index);
         ++index;
     }
-    return std::move(processes);
+    return processes;
 }
 
 
