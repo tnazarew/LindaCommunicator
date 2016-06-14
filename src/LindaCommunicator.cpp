@@ -62,10 +62,14 @@ void linda::LindaCommunicator::wakeProcesses(int fd, linda::TupleFileUtils::tupl
             ProcessFileUtils::writeRecord(fd, &ptr, pid.record_id);
             ProcessFileUtils::unlockRecord(fd, sizeof(ptr), ptr.record_id);
             int temp_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(pid.pid)).c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+            TupleFileUtils::lockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
             tuple->taken = 0;
-            TupleFileUtils::writeRecord(temp_fd, tuple, tuple->record_id);
+            TupleFileUtils::writeRecord(tuple_fd, tuple, tuple->record_id);
+            TupleFileUtils::unlockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
+
             if(close(temp_fd)==-1)
                 throw linda::LindaException("");
+
             ProcessFileUtils::wakeupProcess(pid.pid);
             input = ptr.flag ? true : input;
 
@@ -76,6 +80,7 @@ void linda::LindaCommunicator::wakeProcesses(int fd, linda::TupleFileUtils::tupl
         }
 
     }
+
 }
 
 linda::TupleFileUtils::tuple linda::LindaCommunicator::input(std::string pattern)
@@ -145,6 +150,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
         throw linda::LindaException("");
     TupleFileUtils::tuple mes_t;
     TupleFileUtils::readRecord(new_fd, &mes_t, 0);
+
 
     return mes_t;
 }

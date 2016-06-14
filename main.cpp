@@ -37,6 +37,10 @@ int main(int argc, char** argv)
             std::cerr << l.what();
             return -1;
         }
+        catch (...)
+        {
+            std::cerr << "Unknown but very bad error";
+        }
 
 
     }
