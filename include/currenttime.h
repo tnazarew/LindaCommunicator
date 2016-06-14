@@ -1,7 +1,6 @@
 #ifndef CURRENTTIME_H
 #define CURRENTTIME_H
 #include <sys/time.h>
-using namespace std;
 
 long get_current_time()
 {

@@ -69,12 +69,12 @@ int linda::ProcessFileUtils::checkRecordTaken(int fd, int record_id) {
     }
 }
 
-int linda::ProcessFileUtils::setRecordTaken(int fd, int record_id, char taken)
+int linda::ProcessFileUtils::setRecordTaken(int fd, int record_id, int taken)
 {
     const __off_t i = lseek(fd, record_id * sizeof(process), 0);
     if(i == -1)
         throw linda::LindaException("");
-    const ssize_t i1 = write(fd, &taken, sizeof(char));
+    const ssize_t i1 = write(fd, &taken, sizeof(int));
     if(i1 == -1)
     return i1;
 }

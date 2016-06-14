@@ -6,7 +6,7 @@
 #define LINDACOMMUNICATOR_SINGLAS_H
 namespace linda
 {
-    void ExecuteThisThingThatWillSuspendProcesUntilItGetsSIGUSR1Signal();
+    void sigusr1Suspend();
 }
 
 #endif //LINDACOMMUNICATOR_SINGLAS_H
