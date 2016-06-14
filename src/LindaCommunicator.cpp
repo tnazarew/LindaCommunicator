@@ -169,7 +169,7 @@ void linda::ProcessFileUtils::process::initProcess(const string &pattern_, bool 
     record_id = rec_id;
     taken = true;
     pattern_.copy(pattern, pattern_.size());
-    pattern_[pattern_.size()] = '\0';
+    pattern[pattern_.size()] = '\0';
     std::cout << pattern << std::endl;
 }
 
