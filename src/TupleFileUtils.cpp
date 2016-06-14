@@ -74,12 +74,12 @@ int linda::TupleFileUtils::checkRecordTaken(int fd, int record_id)
     }
 }
 
-int linda::TupleFileUtils::setRecordTaken(int fd, int record_id, char taken)
+int linda::TupleFileUtils::setRecordTaken(int fd, int record_id, int taken)
 {
     const __off_t i = lseek(fd, record_id * sizeof(struct tuple), 0);
     if(i==-1)
         throw linda::LindaException("");
-    const ssize_t i1 = write(fd, &taken, sizeof(char));
+    const ssize_t i1 = write(fd, &taken, sizeof(int));
     if(i1 == -1)
         throw linda::LindaException("");
     return i1;

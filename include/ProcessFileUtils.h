@@ -20,10 +20,10 @@ namespace linda
     public:
         struct process
         {
-            bool taken; // taken - 1 | free - 0
-            bool flag; // input - 1 | read - 0 ?
-            bool found; // default - 0 | waiting for sth - 1
-            time_t timestamp;
+            int taken; // taken - 1 | free - 0
+            int flag; // input - 1 | read - 0 ?
+            int found; // default - 0 | waiting for sth - 1
+            long timestamp;
             pid_t pid;
             int record_id;
             char pattern[99];

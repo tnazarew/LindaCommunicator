@@ -49,7 +49,7 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
 {
     std::vector<linda::ProcessFileUtils::process> pids = linda::MatchesFinder::returnProcessQueue(proc_fd, tuple);
     sortQueue(pids);
-    bool input = false;
+    bool input = 0;
     for (ProcessFileUtils::process pid: pids) {
         if(!input) {
             ProcessFileUtils::process ptr;
@@ -67,7 +67,7 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
 
             ProcessFileUtils::wakeupProcess(pid.pid);
             if (ptr.flag) {
-                input = true;
+                input = 1;
             }
         }
         else
@@ -95,7 +95,7 @@ void linda::LindaCommunicator::output(std::string tuple)
     t.record_id = rec_id;
     tuple.copy(t.pattern, tuple.size());
     t.pattern[tuple.size()] = '\0';
-    t.taken = true;
+    t.taken = 1;
 
     TupleFileUtils::writeRecord(tuple_fd, &t, rec_id);
 
@@ -117,7 +117,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
     {
         if (proc.found) //inny proces znalazł juz krotke dla naszego procesu
         {
-            proc.taken = false;
+            proc.taken = 0;
             ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
             ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
             TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
@@ -127,10 +127,10 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
         {
             if (proc.flag) // input
             {
-                t.taken = false;
+                t.taken = 0;
                 TupleFileUtils::writeRecord(tuple_fd, &t, t.record_id);
             }
-            proc.taken = false;
+            proc.taken = 0;
             ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
             ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
             TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
@@ -148,7 +148,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
         throw linda::LindaException("Unable to open auxiliary file");
 
     ProcessFileUtils::lockRecord(proc_fd, sizeof(proc), rec_id);
-    ProcessFileUtils::setRecordTaken(proc_fd, rec_id, false);
+    ProcessFileUtils::setRecordTaken(proc_fd, rec_id, 0);
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), rec_id);
 
     TupleFileUtils::tuple mes_t;
@@ -162,12 +162,12 @@ void linda::ProcessFileUtils::process::initProcess(const string &pattern_, bool 
 {
     timestamp = get_current_time();
     flag = input;
-    found = false;
+    found = 0;
     pid = getpid();
     if(pid == -1)
         throw linda::LindaException("Getpid failed");
     record_id = rec_id;
-    taken = true;
+    taken = 1;
     pattern_.copy(pattern, pattern_.size());
     pattern[pattern_.size()] = '\0';
     std::cout << pattern << std::endl;
