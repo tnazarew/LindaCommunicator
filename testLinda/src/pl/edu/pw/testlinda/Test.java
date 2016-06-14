@@ -47,12 +47,12 @@ public abstract class Test {
                 lindaInstanceStruct.process.destroyForcibly();
             }
         }
-        /*
+
         try {
             Runtime.getRuntime().exec("rm " + Constants.default_prefix + "*");
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
         return result;
     }
 
@@ -80,12 +80,12 @@ public abstract class Test {
                 lindaInstanceStruct.process.destroyForcibly();
             }
         }
-        /*
+
         try {
-            //Runtime.getRuntime().exec("rm " + Constants.default_prefix + "*");
+            Runtime.getRuntime().exec("rm " + Constants.default_prefix + "*");
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
         result.isOutputCorrect = isOutputCorrect;
         return result;
     }
