@@ -15,7 +15,7 @@ public class Test3 extends Test {
     {
         this.n = n;
         this.x = x;
-        this.description = "Test runs "+ n+x +" input processes with one pattern and " + n+ " output processes with matching tuple" +
+        this.description = "Test runs "+ (int)(n+x) +" input processes with one pattern and " + n+ " output processes with matching tuple" +
                 "plus "+x+" output processes with tuple that does not match";
     }
 
@@ -35,13 +35,13 @@ public class Test3 extends Test {
 
         Result matchingoutputResult = checkResults(matchingOutputList);
         Result unmatchedoutputResult = checkResults(unmatchedOutputList);
-        Result inputResult = checkResults(inputList);
+        Result inputResult = checkResults(inputList, "1,\"abc\",3.1415,\"e\"");
 
         System.out.println("\t Matched Output result: " + matchingoutputResult.getString());
         System.out.println("\t Unmatched Output result: " + unmatchedoutputResult.getString());
         System.out.println("\t Input result: " + inputResult.getString());
 
-        if (matchingoutputResult.finished == n && unmatchedoutputResult.finished == x
+        if (inputResult.isOutputCorrect && matchingoutputResult.finished == n && unmatchedoutputResult.finished == x
                 && inputResult.finished == n && inputResult.waiting ==x) {
             return true;
         } else {

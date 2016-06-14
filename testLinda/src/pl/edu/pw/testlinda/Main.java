@@ -20,7 +20,6 @@ public class Main {
             System.out.println("----------------------------------------------------");
             System.out.println("Running " + test.testName);
             System.out.println(test.description);
-
             if (test.run()) {
                 System.out.println(test.testName + " succeeded");
             } else {

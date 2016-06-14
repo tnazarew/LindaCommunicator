@@ -29,12 +29,12 @@ public class Test1 extends Test {
         }
 
         Result outputResult = checkResults(outputList);
-        Result inputResult = checkResults(inputList);
+        Result inputResult = checkResults(inputList, "1,\"abc\",3.1415,\"e\"");
 
         System.out.println("\t Output result: " + outputResult.getString());
         System.out.println("\t Input result: " + inputResult.getString());
 
-        if ((outputResult.finished == n) && (inputResult.finished  == n)) {
+        if (inputResult.isOutputCorrect && (outputResult.finished == n) && (inputResult.finished  == n)) {
             return true;
         } else {
             return false;

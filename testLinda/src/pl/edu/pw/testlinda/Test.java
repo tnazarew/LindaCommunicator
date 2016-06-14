@@ -49,11 +49,41 @@ public abstract class Test {
         return result;
     }
 
+    protected Result checkResults(ArrayList<LindaInstanceStruct> list, String expectedOutput)
+    {
+        boolean isOutputCorrect = true;
+        Result result = new Result();
+        for (LindaInstanceStruct lindaInstanceStruct : list)
+        {
+            if (lindaInstanceStruct.ret != null && lindaInstanceStruct.ret == 0) {
+                result.finished++;
+                if (!lindaInstanceStruct.out.contains(expectedOutput))
+                    isOutputCorrect = false;
+            }
+            else if (lindaInstanceStruct.ret != null && lindaInstanceStruct.ret == 255) {
+                result.error++;
+                System.out.println("Error: " + lindaInstanceStruct.lindaTypeEnum + " " + lindaInstanceStruct.pattern);
+                if (lindaInstanceStruct.error != null) {
+                    System.out.println("Message: " + lindaInstanceStruct.error);
+                }
+            }
+            else {
+                result.waiting++;
+                //kill processess that are still running
+                lindaInstanceStruct.process.destroyForcibly();
+            }
+        }
+        result.isOutputCorrect = isOutputCorrect;
+        return result;
+    }
+
     public class Result {
 
         public int finished;
         public int waiting;
         public int error;
+
+        public boolean isOutputCorrect;
 
         Result ()
         {

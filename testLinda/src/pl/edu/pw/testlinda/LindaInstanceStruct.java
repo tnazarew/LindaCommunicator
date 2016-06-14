@@ -5,6 +5,7 @@ public class LindaInstanceStruct {
     String pattern;
     Integer ret;
     String error;
+    String out;
     Process process;
 
     public LindaInstanceStruct(LindaTypeEnum en, String pattern)
@@ -14,5 +15,6 @@ public class LindaInstanceStruct {
         ret = null;
         this.process = null;
         this.error = null;
+        this.out = null;
     }
 }

@@ -29,14 +29,14 @@ public class Test2 extends Test{
         }
 
         Result outputResult = checkResults(outputList);
-        Result readResult = checkResults(readList);
-        Result inputResult = checkResults(inputList);
+        Result readResult = checkResults(readList, "1,\"abc\",3.1415,\"e\"");
+        Result inputResult = checkResults(inputList, "1,\"abc\",3.1415,\"e\"");
 
         System.out.println("\t Output result: " + outputResult.getString());
         System.out.println("\t Read result: " + readResult.getString());
         System.out.println("\t Input result: " + inputResult.getString());
 
-        if ((outputResult.finished == n) && (inputResult.finished  == n) && (readResult.error == 0)
+        if (inputResult.isOutputCorrect && readResult.isOutputCorrect && (outputResult.finished == n) && (inputResult.finished  == n) && (readResult.error == 0)
                 && (readResult.finished >= 0) && (readResult.finished <= n)) {
             return true;
         } else {
