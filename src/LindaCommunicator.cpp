@@ -168,7 +168,8 @@ void linda::ProcessFileUtils::process::initProcess(const string &pattern_, bool 
         throw linda::LindaException("Getpid failed");
     record_id = rec_id;
     taken = true;
-    pattern_.copy(pattern, pattern_.size()+1);
+    pattern_.copy(pattern, pattern_.size());
+    pattern_[pattern_.size()] = '\0';
     std::cout << pattern << std::endl;
 }
 

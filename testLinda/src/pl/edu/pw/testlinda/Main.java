@@ -7,15 +7,15 @@ public class Main {
     public static void main(String[] args) {
 
         //path to linda
-        Constants.path = "/home/juzer/mocklinda";
+        Constants.path = "/home/wojtek/projekty/LindaCommunicator/main";
         Constants.default_prefix = "/tmp/lin_mes";
 
         ArrayList<Test> tests = new ArrayList<>();
         tests.add(new Test1(10));
-        tests.add(new Test2(10));
-        tests.add(new Test3(10, 10));
-        tests.add(new Test4(10));
-        tests.add(new Test5(10));
+//        tests.add(new Test2(10));
+//        tests.add(new Test3(10, 10));
+//        tests.add(new Test4(10));
+//        tests.add(new Test5(10));
 
         for (Test test : tests) {
             System.out.println("----------------------------------------------------");
