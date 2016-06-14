@@ -8,13 +8,14 @@ public class Main {
 
         //path to linda
         Constants.path = "/home/juzer/mocklinda";
+        Constants.default_prefix = "/tmp/lin_mes";
 
         ArrayList<Test> tests = new ArrayList<>();
-        tests.add(new Test1(100));
-        tests.add(new Test2(100));
-        tests.add(new Test3(100, 100));
-        tests.add(new Test4(100));
-        tests.add(new Test5(100));
+        tests.add(new Test1(10));
+        tests.add(new Test2(10));
+        tests.add(new Test3(10, 10));
+        tests.add(new Test4(10));
+        tests.add(new Test5(10));
 
         for (Test test : tests) {
             System.out.println("----------------------------------------------------");

@@ -1,9 +1,5 @@
 package pl.edu.pw.testlinda;
 
-import pl.edu.pw.testlinda.*;
-import pl.edu.pw.testlinda.LindaTypeEnum;
-import pl.edu.pw.testlinda.Test;
-
 import java.util.ArrayList;
 
 public class Test3 extends Test {
@@ -33,9 +29,9 @@ public class Test3 extends Test {
             e.printStackTrace();
         }
 
-        Result matchingoutputResult = checkResults(matchingOutputList);
-        Result unmatchedoutputResult = checkResults(unmatchedOutputList);
-        Result inputResult = checkResults(inputList, "1,\"abc\",3.1415,\"e\"");
+        Result matchingoutputResult = checkResultsAndClean(matchingOutputList);
+        Result unmatchedoutputResult = checkResultsAndClean(unmatchedOutputList);
+        Result inputResult = checkResultsAndClean(inputList, "1,\"abc\",3.1415,\"e\"");
 
         System.out.println("\t Matched Output result: " + matchingoutputResult.getString());
         System.out.println("\t Unmatched Output result: " + unmatchedoutputResult.getString());

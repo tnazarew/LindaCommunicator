@@ -24,8 +24,8 @@ public class Test5 extends Test{
             e.printStackTrace();
         }
 
-        Result outputResult = checkResults(outputList);
-        Result inputResult = checkResults(inputList, "1,\"abc\",3.1415,\"e\"");
+        Result outputResult = checkResultsAndClean(outputList);
+        Result inputResult = checkResultsAndClean(inputList, "1,\"abc\",3.1415,\"e\"");
 
         System.out.println("\t Output result: " + outputResult.getString());
         System.out.println("\t Input result: " + inputResult.getString());

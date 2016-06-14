@@ -1,5 +1,6 @@
 package pl.edu.pw.testlinda;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class Test {
@@ -25,7 +26,7 @@ public abstract class Test {
         return outputList;
     }
 
-    protected Result checkResults(ArrayList<LindaInstanceStruct> list)
+    protected Result checkResultsAndClean(ArrayList<LindaInstanceStruct> list)
     {
         Result result = new Result();
         for (LindaInstanceStruct lindaInstanceStruct : list)
@@ -46,10 +47,16 @@ public abstract class Test {
                 lindaInstanceStruct.process.destroyForcibly();
             }
         }
+        /*
+        try {
+            Runtime.getRuntime().exec("rm " + Constants.default_prefix + "*");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
         return result;
     }
 
-    protected Result checkResults(ArrayList<LindaInstanceStruct> list, String expectedOutput)
+    protected Result checkResultsAndClean(ArrayList<LindaInstanceStruct> list, String expectedOutput)
     {
         boolean isOutputCorrect = true;
         Result result = new Result();
@@ -73,6 +80,12 @@ public abstract class Test {
                 lindaInstanceStruct.process.destroyForcibly();
             }
         }
+        /*
+        try {
+            //Runtime.getRuntime().exec("rm " + Constants.default_prefix + "*");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
         result.isOutputCorrect = isOutputCorrect;
         return result;
     }

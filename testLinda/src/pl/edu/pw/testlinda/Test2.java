@@ -1,9 +1,5 @@
 package pl.edu.pw.testlinda;
 
-import pl.edu.pw.testlinda.LindaInstanceStruct;
-import pl.edu.pw.testlinda.LindaTypeEnum;
-import pl.edu.pw.testlinda.Test;
-
 import java.util.ArrayList;
 
 public class Test2 extends Test{
@@ -28,9 +24,9 @@ public class Test2 extends Test{
             e.printStackTrace();
         }
 
-        Result outputResult = checkResults(outputList);
-        Result readResult = checkResults(readList, "1,\"abc\",3.1415,\"e\"");
-        Result inputResult = checkResults(inputList, "1,\"abc\",3.1415,\"e\"");
+        Result outputResult = checkResultsAndClean(outputList);
+        Result readResult = checkResultsAndClean(readList, "1,\"abc\",3.1415,\"e\"");
+        Result inputResult = checkResultsAndClean(inputList, "1,\"abc\",3.1415,\"e\"");
 
         System.out.println("\t Output result: " + outputResult.getString());
         System.out.println("\t Read result: " + readResult.getString());
