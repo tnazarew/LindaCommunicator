@@ -47,12 +47,7 @@ public abstract class Test {
                 lindaInstanceStruct.process.destroyForcibly();
             }
         }
-
-        try {
-            Runtime.getRuntime().exec("rm " + Constants.default_prefix + "*");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cleanTmpFiles();
         return result;
     }
 
@@ -80,12 +75,7 @@ public abstract class Test {
                 lindaInstanceStruct.process.destroyForcibly();
             }
         }
-
-        try {
-            Runtime.getRuntime().exec("rm " + Constants.default_prefix + "*");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cleanTmpFiles();
         result.isOutputCorrect = isOutputCorrect;
         return result;
     }
@@ -109,6 +99,16 @@ public abstract class Test {
         {
             String s = "Finished " + finished + ", Waiting: " + waiting + ", Error: " + error;
             return s;
+        }
+    }
+
+    private void cleanTmpFiles() {
+        try {
+            Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.msgFilePrefix + "*" });
+            Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.tupleFilePath});
+            Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.procFilePath});
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
