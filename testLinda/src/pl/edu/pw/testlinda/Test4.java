@@ -14,14 +14,14 @@ public class Test4 extends Test{
 
     @Override
     public boolean run() {
-        ArrayList<LindaInstanceStruct> outputList = startNInstances(n, LindaTypeEnum.OUTPUT, "1,\\\"abc\\\",3.1415,\\\"e\\\"");
-        ArrayList<LindaInstanceStruct> readList = startNInstances(n, LindaTypeEnum.READ, "i:1,s:\\\"abc\\\",f:*,s:\\>\\\"d\\\"");
+        ArrayList<LindaInstanceStruct> outputList = startNInstances(n, LindaTypeEnum.OUTPUT, "1,\"abc\",3.1415,\"e\"");
+        ArrayList<LindaInstanceStruct> readList = startNInstances(n, LindaTypeEnum.READ, "i:1,s:\"abc\",f:*,s:>\"d\"");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        ArrayList<LindaInstanceStruct> inputList = startNInstances(n, LindaTypeEnum.INPUT, "i:1,s:\\\"abc\\\",f:*,s:\\>\\\"d\\\"");
+        ArrayList<LindaInstanceStruct> inputList = startNInstances(n, LindaTypeEnum.INPUT, "i:1,s:\"abc\",f:*,s:>\"d\"");
 
         //wait for the processess to finish
         try {

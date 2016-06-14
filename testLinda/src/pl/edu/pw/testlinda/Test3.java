@@ -17,9 +17,9 @@ public class Test3 extends Test {
 
     @Override
     public boolean run() {
-        ArrayList<LindaInstanceStruct> inputList = startNInstances(n+x, LindaTypeEnum.INPUT, "i:1,s:\\\"abc\",f:*,s:\\>\\\"d\\\"");
-        ArrayList<LindaInstanceStruct> matchingOutputList = startNInstances(n, LindaTypeEnum.OUTPUT, "1,\\\"abc\",3.1415,\\\"e\\\"");
-        ArrayList<LindaInstanceStruct> unmatchedOutputList = startNInstances(x, LindaTypeEnum.OUTPUT, "1,\\\"ef\\\",3.1415,\\\"e\\\"");
+        ArrayList<LindaInstanceStruct> inputList = startNInstances(n+x, LindaTypeEnum.INPUT, "i:1,s:\"abc\",f:*,s:\\>\"d\"");
+        ArrayList<LindaInstanceStruct> matchingOutputList = startNInstances(n, LindaTypeEnum.OUTPUT, "1,\"abc\",3.1415,\"e\"");
+        ArrayList<LindaInstanceStruct> unmatchedOutputList = startNInstances(x, LindaTypeEnum.OUTPUT, "1,\"ef\",3.1415,\"e\"");
 
 
         //wait for the processess to finish
