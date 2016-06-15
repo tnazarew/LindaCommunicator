@@ -104,10 +104,13 @@ public abstract class Test {
 
     private void cleanTmpFiles() {
         try {
-            Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.msgFilePrefix + "*" });
-            Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.tupleFilePath});
-            Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.procFilePath});
-        } catch (IOException e) {
+            Process cleaner = Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.msgFilePrefix + "*" });
+            cleaner.waitFor();
+            cleaner = Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.tupleFilePath});
+            cleaner.waitFor();
+            cleaner = Runtime.getRuntime().exec(new String[] { "sh", "-c", "rm " + Constants.procFilePath});
+            cleaner.waitFor();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
