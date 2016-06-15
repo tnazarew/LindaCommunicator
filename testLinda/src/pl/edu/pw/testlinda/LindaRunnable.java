@@ -25,36 +25,30 @@ public class LindaRunnable implements Runnable {
             lindaInstanceStruct.ret = p.waitFor();
 
             if (lindaInstanceStruct.ret == 0) {
-                try {
-                    String out = new String();
-
-                    InputStream is = p.getInputStream();
-                    int data = is.read();
-                    while (data != -1) {
-                        out += (char) data;
-                        data = is.read();
-                    }
-                    lindaInstanceStruct.out = out;
-                } catch (IOException ex)
-                {}
+                lindaInstanceStruct.out = getStringFromInputStream(p.getInputStream());
             }
             //255 return code is equal -1 in C/C++
             if (lindaInstanceStruct.ret == 255) {
-                try {
-                    String error = new String();
-
-                    InputStream is = p.getErrorStream();
-                    int data = is.read();
-                    while (data != -1) {
-                        error += (char) data;
-                        data = is.read();
-                    }
-                    lindaInstanceStruct.error = error;
-                } catch (IOException ex)
-                {}
+                lindaInstanceStruct.error = getStringFromInputStream(p.getErrorStream());
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private String getStringFromInputStream(InputStream is) {
+        try {
+            String str = new String();
+
+            int data = is.read();
+            while (data != -1) {
+                str += (char) data;
+                data = is.read();
+            }
+            return str;
+        } catch (IOException ex)
+        {
+            return null;
         }
     }
 }

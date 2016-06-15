@@ -1,6 +1,5 @@
 package pl.edu.pw.testlinda;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class Test {
@@ -41,16 +40,13 @@ public abstract class Test {
             }
             else if (lindaInstanceStruct.ret != null && lindaInstanceStruct.ret == 255) {
                 result.error++;
-                System.out.println("Error: " + lindaInstanceStruct.lindaTypeEnum + " " + lindaInstanceStruct.pattern);
-                if (lindaInstanceStruct.error != null) {
-                    System.out.println("Message: " + lindaInstanceStruct.error);
-                }
             }
             else {
                 result.waiting++;
                 //kill processess that are still running
                 lindaInstanceStruct.process.destroyForcibly();
             }
+            printErrorStream(lindaInstanceStruct);
         }
         cleanTmpFiles();
         return result;
@@ -69,16 +65,13 @@ public abstract class Test {
             }
             else if (lindaInstanceStruct.ret != null && lindaInstanceStruct.ret == 255) {
                 result.error++;
-                System.out.println("Error: " + lindaInstanceStruct.lindaTypeEnum + " " + lindaInstanceStruct.pattern);
-                if (lindaInstanceStruct.error != null) {
-                    System.out.println("Message: " + lindaInstanceStruct.error);
-                }
             }
             else {
                 result.waiting++;
                 //kill processess that are still running
                 lindaInstanceStruct.process.destroyForcibly();
             }
+            printErrorStream(lindaInstanceStruct);
         }
         cleanTmpFiles();
         result.isOutputCorrect = isOutputCorrect;
@@ -117,6 +110,13 @@ public abstract class Test {
             cleaner.waitFor();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void printErrorStream(LindaInstanceStruct lindaInstanceStruct) {
+        if (lindaInstanceStruct.error != null) {
+            System.out.println("Error: " + lindaInstanceStruct.lindaTypeEnum + " " + lindaInstanceStruct.pattern);
+            System.out.println("CERR: " + lindaInstanceStruct.error);
         }
     }
 }
