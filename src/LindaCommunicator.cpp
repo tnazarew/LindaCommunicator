@@ -122,6 +122,8 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
     TupleFileUtils::tuple t = MatchesFinder::returnBlockedTuple(tuple_fd, &proc); // znajduje krotke dla wybranego procesu
     ProcessFileUtils::lockRecord(proc_fd, sizeof(proc), proc.record_id); // blokuje obszar
 
+    ProcessFileUtils::readRecord(proc_fd, &proc, proc.record_id);
+
     if (t.record_id != -1) // krotka znaleziona
     {
         if (proc.found) // inny proces znalazł juz krotke dla naszego procesu
@@ -131,6 +133,8 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
 
         else // nie znaleziono dla nas krotki, nasza jest tą jedyną
         {
+            std::cerr << getpid();
+            std::cerr << "\n";
             return readWhenIFound(proc, t);
         }
     }
@@ -180,7 +184,10 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(Proce
 
     int new_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(proc.pid)).c_str(), O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if(new_fd == -1)
-        throw linda::LindaException("Unable to open auxiliary fileeee");
+    {
+        throw linda::LindaException("Unable to open auxiliary file");
+
+    }
 
     ProcessFileUtils::lockRecord(proc_fd, sizeof(proc), proc.record_id);
     ProcessFileUtils::setRecordTaken(proc_fd, proc.record_id, 0);
