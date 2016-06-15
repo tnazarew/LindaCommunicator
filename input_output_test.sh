@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in `seq 1 20`;
+for i in `seq 1 100`;
 do
     ./main output 1,\"abc\",3.1415,\"e\" &
 	./main input i:1,s:\"abc\",f:*,s:\>\"d\" &

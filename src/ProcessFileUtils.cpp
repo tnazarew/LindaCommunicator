@@ -101,14 +101,21 @@ int linda::ProcessFileUtils::findAndLock(int fd)
 {
 
     int rec_id=0;
+    int first = 0;
     while(true)
     {
         ProcessFileUtils::lockRecord(fd, sizeof(ProcessFileUtils::process), rec_id);
         if(!ProcessFileUtils::checkRecordTaken(fd, rec_id))
         {
+            if (!first)
+                ProcessFileUtils::unlockRecord(fd, sizeof(ProcessFileUtils::process), rec_id-1);
             return rec_id;
         }
-        ProcessFileUtils::unlockRecord(fd, sizeof(ProcessFileUtils::process), rec_id);
+        if (!first)
+            ProcessFileUtils::unlockRecord(fd, sizeof(ProcessFileUtils::process), rec_id-1);
+        else
+            first = 1;
+
         rec_id ++;
     }
 }

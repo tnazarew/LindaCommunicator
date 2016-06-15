@@ -84,8 +84,6 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
         }
     }
     TupleFileUtils::unlockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
-
-    std::cerr << "AWOKEN " << pids.size() << std::endl;
 }
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::input(std::string pattern)
@@ -103,6 +101,7 @@ void linda::LindaCommunicator::output(std::string tuple)
     int rec_id = TupleFileUtils::findAndLock(tuple_fd);
     TupleFileUtils::tuple t;
     t.record_id = rec_id;
+    memset(t.pattern, '-', 99);
     tuple.copy(t.pattern, tuple.size());
     t.pattern[tuple.size()] = '\0';
     t.taken = 1;
@@ -144,7 +143,6 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
-    std::cerr<<"OTHER\n";
     proc.taken = 0;
     ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
@@ -162,7 +160,6 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
-    std::cerr<<"I FOUND\n";
     if (proc.flag) // input
     {
         t.taken = 0;
@@ -177,7 +174,6 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(ProcessFil
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(ProcessFileUtils::process &proc)
 {
-    std::cerr<<"NOBODY\n";
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
     linda::sigusr1Suspend();
 
@@ -205,6 +201,7 @@ void linda::ProcessFileUtils::process::initProcess(const std::string &pattern_, 
         throw linda::LindaException("Getpid failed");
     record_id = rec_id;
     taken = 1;
+    memset(pattern, '-', 99);
     pattern_.copy(pattern, pattern_.size());
     pattern[pattern_.size()] = '\0';
     std::cout << pattern << std::endl;

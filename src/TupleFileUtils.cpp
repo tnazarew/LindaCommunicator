@@ -88,21 +88,24 @@ int linda::TupleFileUtils::setRecordTaken(int fd, int record_id, int taken)
 int linda::TupleFileUtils::findAndLock(int fd)
 {
     int rec_id = 0;
+    int first = 0;
     while (true)
     {
         TupleFileUtils::lockRecord(fd, sizeof(TupleFileUtils::tuple), rec_id);
         if (!TupleFileUtils::checkRecordTaken(fd, rec_id))
         {
+            if (!first)
+                TupleFileUtils::unlockRecord(fd, sizeof(TupleFileUtils::tuple), rec_id-1);
             return rec_id;
         }
-        TupleFileUtils::unlockRecord(fd, sizeof(TupleFileUtils::tuple), rec_id);
+        if (!first)
+            TupleFileUtils::unlockRecord(fd, sizeof(TupleFileUtils::tuple), rec_id-1);
+        else
+            first = 1;
+
         rec_id++;
     }
 }
-
-
-
-
 
 
 
