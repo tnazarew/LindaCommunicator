@@ -84,6 +84,8 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
         }
     }
     TupleFileUtils::unlockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
+
+    std::cerr << "AWOKEN " << pids.size() << std::endl;
 }
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::input(std::string pattern)
@@ -142,6 +144,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
+    std::cerr<<"OTHER" << std::endl;
     proc.taken = 0;
     ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
@@ -159,6 +162,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
+    std::cerr<<"I FOUND" << std::endl;
     if (proc.flag) // input
     {
         t.taken = 0;
@@ -173,6 +177,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(ProcessFil
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(ProcessFileUtils::process &proc)
 {
+    std::cerr<<"NOBODY" << std::endl;
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
     linda::sigusr1Suspend();
 

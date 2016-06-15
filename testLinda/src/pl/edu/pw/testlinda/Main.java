@@ -7,18 +7,18 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
         //path to linda
-        Constants.path = "/home/juzer/.CLion2016.1/system/cmake/generated/LindaCommunicator-103156cf/103156cf/Debug/main";
+        Constants.path = "/home/wojtek/projekty/LindaCommunicator/main";
         Constants.msgFilePrefix = "/tmp/lin_mes";
         Constants.procFilePath = "/tmp/proc_test";
         Constants.tupleFilePath = "/tmp/tuple_test";
 
         ArrayList<Test> tests = new ArrayList<>();
-        tests.add(new Test1(100));
-        tests.add(new Test2(100));
-        tests.add(new Test3(100, 100));
-        tests.add(new Test4(100));
-        tests.add(new Test5(100));
-        tests.add(new Test6(100));
+        tests.add(new Test1(30));
+//        tests.add(new Test2(100));
+//        tests.add(new Test3(100, 100));
+//        tests.add(new Test4(100));
+//        tests.add(new Test5(100));
+//        tests.add(new Test6(100));
 
         for (Test test : tests) {
             System.out.println("----------------------------------------------------");
@@ -29,7 +29,6 @@ public class Main {
             } else {
                 System.out.println(test.testName + " failed");
             }
-            Thread.sleep(5000); //wait for the tmp files to remove
         }
     }
 

@@ -14,12 +14,13 @@ public class Test1 extends Test {
 
     @Override
     public boolean run() {
-        ArrayList<LindaInstanceStruct> inputList = startNInstances(n, LindaTypeEnum.INPUT, "i:1,s:\"abc\",f:*,s:>\"d\"");
+
         ArrayList<LindaInstanceStruct> outputList = startNInstances(n, LindaTypeEnum.OUTPUT, "1,\"abc\",3.1415,\"e\"");
+        ArrayList<LindaInstanceStruct> inputList = startNInstances(n, LindaTypeEnum.INPUT, "i:1,s:\"abc\",f:*,s:>\"d\"");
 
         //wait for the processess to finish
         try {
-            Thread.sleep(2000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

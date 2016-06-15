@@ -21,13 +21,18 @@ int main(int argc, char** argv)
         {
             if(first == "input")
             {
+                std::cerr << "INPUT started" << std::endl;
                 t = com.input(std::string(argv[2]));
                 std::cout << t.pattern << std::endl;
             }
             else if(first == "output")
+            {
+                std::cerr << "OUTPUT started" << std::endl;
                 com.output(std::string(argv[2]));
+            }
             else if(first == "read")
             {
+                std::cerr << "READ started" << std::endl;
                 t = com.read(std::string(argv[2]));
                 std::cout << t.pattern << std::endl;
             }
