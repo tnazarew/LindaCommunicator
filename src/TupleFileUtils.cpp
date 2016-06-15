@@ -17,7 +17,7 @@ int linda::TupleFileUtils::lockRecord(int fd, int length, int record_id)
     const int i = fcntl(fd, F_SETLKW, &lck);
     if(i == -1)
         throw linda::LindaException(std::string("TupleFileUtils::lockRecord fcntl failed| Errno: ") + strerror(errno));
-    std::cout << "tuple lock: " <<  record_id << std::endl;
+    //std::cout << "tuple lock: " <<  record_id << std::endl;
     return i;
 }
 //*********************************************************************************************************************
@@ -31,7 +31,7 @@ int linda::TupleFileUtils::unlockRecord(int fd, int length, int record_id)
     const __pid_t t = lck.l_pid = getpid();
     if(t==-1)
         throw linda::LindaException(strerror(errno));
-    std::cout << "tuple unlock: " <<  record_id << std::endl;
+    //std::cout << "tuple unlock: " <<  record_id << std::endl;
     return fcntl(fd, F_SETLKW, &lck);
 }
 //*********************************************************************************************************************
