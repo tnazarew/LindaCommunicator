@@ -74,6 +74,7 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
             ProcessFileUtils::wakeupProcess(pid.pid);
             if (ptr.flag)
             {
+                TupleFileUtils::setRecordTaken(tuple_fd, tuple->record_id, 0);
                 input = 1;
             }
         }
@@ -124,44 +125,64 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
     {
         if (proc.found) // inny proces znalazł juz krotke dla naszego procesu
         {
-//            proc.taken = 0;
-//            ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
-//            ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
-//            TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
-
-            ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
-            linda::sigusr1Suspend();
+            return readWhenOtherProcessFound(proc_fd, proc, tuple_fd, t);
         }
 
         else // nie znaleziono dla nas krotki, nasza jest tą jedyną
         {
-            if (proc.flag) // input
-            {
-                t.taken = 0;
-                TupleFileUtils::writeRecord(tuple_fd, &t, t.record_id);
-            }
-            proc.taken = 0;
-            ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
-            ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
-            TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
-            return t;
+            return readWhenIFound(proc_fd, proc, tuple_fd, t);
         }
     }
 
     else
     {
-        ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
-
-        linda::sigusr1Suspend();
+        return readWhenNobodyFound(proc_fd, proc);
     }
+}
+//*********************************************************************************************************************
+linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound(int proc_fd, ProcessFileUtils::process &proc, int tuple_fd, TupleFileUtils::tuple &t)
+{
+    proc.taken = 0;
+    ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
+    ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
+    TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
+    linda::sigusr1Suspend();
 
     int new_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(proc.pid)).c_str(), O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if(new_fd == -1)
         throw linda::LindaException("Unable to open auxiliary file");
+    TupleFileUtils::tuple mes_t;
+    TupleFileUtils::readRecord(new_fd, &mes_t, 0);
 
-    ProcessFileUtils::lockRecord(proc_fd, sizeof(proc), rec_id);
-    ProcessFileUtils::setRecordTaken(proc_fd, rec_id, 0);
-    ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), rec_id);
+    return mes_t;
+}
+//*********************************************************************************************************************
+linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(int proc_fd, ProcessFileUtils::process &proc, int tuple_fd, TupleFileUtils::tuple &t)
+{
+    if (proc.flag) // input
+    {
+        t.taken = 0;
+        TupleFileUtils::writeRecord(tuple_fd, &t, t.record_id);
+    }
+    proc.taken = 0;
+    ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
+    ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
+    TupleFileUtils::unlockRecord(tuple_fd, sizeof(t), t.record_id);
+    return t;
+}
+//*********************************************************************************************************************
+linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(int proc_fd, ProcessFileUtils::process &proc)
+{
+    ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
+    linda::sigusr1Suspend();
+
+    int new_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(proc.pid)).c_str(), O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    if(new_fd == -1)
+        throw linda::LindaException("Unable to open auxiliary fileeee");
+
+    ProcessFileUtils::lockRecord(proc_fd, sizeof(proc), proc.record_id);
+    ProcessFileUtils::setRecordTaken(proc_fd, proc.record_id, 0);
+    ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
 
     TupleFileUtils::tuple mes_t;
     TupleFileUtils::readRecord(new_fd, &mes_t, 0);

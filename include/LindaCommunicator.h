@@ -29,6 +29,11 @@ namespace linda
         void sortQueue(std::vector<ProcessFileUtils::process>&);
         void findMatching(std::string pattern);
         TupleFileUtils::tuple read_(std::string, bool);
+        TupleFileUtils::tuple readWhenOtherProcessFound(int proc_fd, ProcessFileUtils::process &proc, int tuple_fd, TupleFileUtils::tuple &t);
+        TupleFileUtils::tuple readWhenIFound(int proc_fd, ProcessFileUtils::process &proc, int tuple_fd, TupleFileUtils::tuple &t);
+        TupleFileUtils::tuple readWhenNobodyFound(int proc_fd, ProcessFileUtils::process &proc);
+
+
 
         int tuple_fd, proc_fd;
 
