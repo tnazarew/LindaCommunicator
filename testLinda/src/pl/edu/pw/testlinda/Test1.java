@@ -20,7 +20,7 @@ public class Test1 extends Test {
 
         //wait for the processess to finish
         try {
-            Thread.sleep(10000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

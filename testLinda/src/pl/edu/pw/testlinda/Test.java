@@ -1,5 +1,6 @@
 package pl.edu.pw.testlinda;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class Test {
@@ -43,8 +44,6 @@ public abstract class Test {
             }
             else {
                 result.waiting++;
-                //kill processess that are still running
-                lindaInstanceStruct.process.destroyForcibly();
             }
             printErrorStream(lindaInstanceStruct);
         }
@@ -68,10 +67,9 @@ public abstract class Test {
             }
             else {
                 result.waiting++;
-                //kill processess that are still running
-                lindaInstanceStruct.process.destroyForcibly();
             }
             printErrorStream(lindaInstanceStruct);
+            cleanUpAfterAProcess(lindaInstanceStruct.process);
         }
         cleanTmpFiles();
         result.isOutputCorrect = isOutputCorrect;
@@ -113,10 +111,25 @@ public abstract class Test {
         }
     }
 
+    private void cleanUpAfterAProcess(Process p) {
+        if (p != null) {
+            try {
+                p.getErrorStream().close();
+                p.getInputStream().close();
+                p.getOutputStream().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                p.destroyForcibly();
+            }
+        }
+    }
+
     private void printErrorStream(LindaInstanceStruct lindaInstanceStruct) {
         if (lindaInstanceStruct.error != null && !lindaInstanceStruct.error.equals("")) {
-            System.out.println("Error: " + lindaInstanceStruct.lindaTypeEnum + " " + lindaInstanceStruct.pattern);
-            System.out.println("CERR: " + lindaInstanceStruct.error);
+            //System.out.println("Error: " + lindaInstanceStruct.lindaTypeEnum + " " + lindaInstanceStruct.pattern);
+            //System.out.println("CERR: " + lindaInstanceStruct.error);
         }
     }
 }

@@ -32,7 +32,7 @@ public class LindaRunnable implements Runnable {
         }
     }
 
-    private String getStringFromInputStream(InputStream is) {
+    public String getStringFromInputStream(InputStream is) {
         try {
             String str = new String();
 
