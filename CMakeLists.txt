@@ -13,7 +13,6 @@ add_library(${PROJECT_NAME}
         src/TupleFileUtils.cpp
         src/PatternComparator.cpp
         src/MatchesFinder.cpp
-        src/SearchProcessFile.cpp
         src/signals.cpp)
 
 

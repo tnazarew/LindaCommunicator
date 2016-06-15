@@ -68,7 +68,7 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
 
             if (close(temp_fd) == -1) {
                 TupleFileUtils::unlockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
-                throw linda::LindaException("");
+                throw linda::LindaException("This should never happen");
             }
 
             ProcessFileUtils::wakeupProcess(pid.pid);
@@ -143,6 +143,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
+    std::cerr << "DZIWNE ";
     proc.taken = 0;
     ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
