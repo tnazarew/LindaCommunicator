@@ -9,7 +9,7 @@ public class Test5 extends Test{
     public Test5(int n)
     {
         this.n = n;
-        this.description = "Test runs " + n + " input processes with the same pattern and "+ n+ " output processes with the matching tuple";
+        this.description = "Test runs " + n + " read processes with the same pattern and "+ 1+ " output processes with the matching tuple";
     }
 
     @Override
