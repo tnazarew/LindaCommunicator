@@ -16,14 +16,19 @@ public abstract class Test {
         ArrayList<LindaInstanceStruct> outputList = new ArrayList<>();
         for (int i = 0; i < n; i++)
         {
-            LindaInstanceStruct lindaInstanceStruct =
-                    new LindaInstanceStruct(lindaTypeEnum, pattern);
+            outputList.add(startInstance(lindaTypeEnum, pattern));
 
-            outputList.add(lindaInstanceStruct);
-            LindaRunnable lindaRunnable = new LindaRunnable(lindaInstanceStruct);
-            new Thread(lindaRunnable).start();
         }
         return outputList;
+    }
+
+    protected LindaInstanceStruct startInstance(LindaTypeEnum lindaTypeEnum, String pattern)
+    {
+        LindaInstanceStruct lindaInstanceStruct =
+                new LindaInstanceStruct(lindaTypeEnum, pattern);
+
+        new Thread(new LindaRunnable(lindaInstanceStruct)).start();
+        return lindaInstanceStruct;
     }
 
     protected Result checkResultsAndClean(ArrayList<LindaInstanceStruct> list)
