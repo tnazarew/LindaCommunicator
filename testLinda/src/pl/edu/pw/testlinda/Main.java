@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
         //path to linda
-        Constants.path = "//home/juzer/.CLion2016.1/system/cmake/generated/LindaCommunicator-103156cf/103156cf/Debug/main";
+        Constants.path = "/home/juzer/.CLion2016.1/system/cmake/generated/LindaCommunicator-103156cf/103156cf/Debug/main";
         Constants.msgFilePrefix = "/tmp/lin_mes";
         Constants.procFilePath = "/tmp/proc_test";
         Constants.tupleFilePath = "/tmp/tuple_test";
@@ -29,7 +29,7 @@ public class Main {
             } else {
                 System.out.println(test.testName + " failed");
             }
-            Thread.sleep(1000); //wait for the tmp files to remove
+            Thread.sleep(5000); //wait for the tmp files to remove
         }
     }
 

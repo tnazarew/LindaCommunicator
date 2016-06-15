@@ -114,7 +114,7 @@ public abstract class Test {
     }
 
     private void printErrorStream(LindaInstanceStruct lindaInstanceStruct) {
-        if (lindaInstanceStruct.error != null) {
+        if (lindaInstanceStruct.error != null && !lindaInstanceStruct.error.equals("")) {
             System.out.println("Error: " + lindaInstanceStruct.lindaTypeEnum + " " + lindaInstanceStruct.pattern);
             System.out.println("CERR: " + lindaInstanceStruct.error);
         }
