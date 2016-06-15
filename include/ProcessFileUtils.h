@@ -30,7 +30,7 @@ namespace linda
 
             bool operator<(const process &other) const;
 
-            void initProcess(const std::string &pattern, bool input, int rec_id);
+            void initProcess(const std::string &pattern, int input, int rec_id);
         };
 
         static int wakeupProcess(pid_t pid);

@@ -88,12 +88,12 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::input(std::string pattern)
 {
-    return read_(pattern, true);
+    return read_(pattern, 1);
 }
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::read(std::string pattern)
 {
-    return read_(pattern, false);
+    return read_(pattern, 0);
 }
 //*********************************************************************************************************************
 void linda::LindaCommunicator::output(std::string tuple)
@@ -110,7 +110,7 @@ void linda::LindaCommunicator::output(std::string tuple)
     wakeProcesses(&t);
 }
 //*********************************************************************************************************************
-linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern, bool input)
+linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern, int input)
 {
     int rec_id = ProcessFileUtils::findAndLock(proc_fd); // wolne miejsce w pliku z procesami zakładamy że blokuje obszar
     linda::ProcessFileUtils::process proc;
@@ -125,22 +125,22 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
     {
         if (proc.found) // inny proces znalazł juz krotke dla naszego procesu
         {
-            return readWhenOtherProcessFound(proc_fd, proc, tuple_fd, t);
+            return readWhenOtherProcessFound(proc, t);
         }
 
         else // nie znaleziono dla nas krotki, nasza jest tą jedyną
         {
-            return readWhenIFound(proc_fd, proc, tuple_fd, t);
+            return readWhenIFound(proc, t);
         }
     }
 
     else
     {
-        return readWhenNobodyFound(proc_fd, proc);
+        return readWhenNobodyFound(proc);
     }
 }
 //*********************************************************************************************************************
-linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound(int proc_fd, ProcessFileUtils::process &proc, int tuple_fd, TupleFileUtils::tuple &t)
+linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
     proc.taken = 0;
     ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
@@ -157,7 +157,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound
     return mes_t;
 }
 //*********************************************************************************************************************
-linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(int proc_fd, ProcessFileUtils::process &proc, int tuple_fd, TupleFileUtils::tuple &t)
+linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
     if (proc.flag) // input
     {
@@ -171,7 +171,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(int proc_f
     return t;
 }
 //*********************************************************************************************************************
-linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(int proc_fd, ProcessFileUtils::process &proc)
+linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(ProcessFileUtils::process &proc)
 {
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
     linda::sigusr1Suspend();
@@ -190,7 +190,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(int p
     return mes_t;
 }
 //*********************************************************************************************************************
-void linda::ProcessFileUtils::process::initProcess(const std::string &pattern_, bool input, int rec_id)
+void linda::ProcessFileUtils::process::initProcess(const std::string &pattern_, int input, int rec_id)
 {
     timestamp = get_current_time();
     flag = input;
