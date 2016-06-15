@@ -144,7 +144,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
-    std::cerr<<"OTHER" << std::endl;
+    std::cerr<<"OTHER\n";
     proc.taken = 0;
     ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
@@ -162,7 +162,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
-    std::cerr<<"I FOUND" << std::endl;
+    std::cerr<<"I FOUND\n";
     if (proc.flag) // input
     {
         t.taken = 0;
@@ -177,7 +177,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenIFound(ProcessFil
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(ProcessFileUtils::process &proc)
 {
-    std::cerr<<"NOBODY" << std::endl;
+    std::cerr<<"NOBODY\n";
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
     linda::sigusr1Suspend();
 

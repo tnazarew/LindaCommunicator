@@ -13,7 +13,7 @@ public class Main {
         Constants.tupleFilePath = "/tmp/tuple_test";
 
         ArrayList<Test> tests = new ArrayList<>();
-        tests.add(new Test1(30));
+        tests.add(new Test1(100));
 //        tests.add(new Test2(100));
 //        tests.add(new Test3(100, 100));
 //        tests.add(new Test4(100));
