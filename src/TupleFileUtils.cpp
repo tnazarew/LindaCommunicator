@@ -16,8 +16,7 @@ int linda::TupleFileUtils::lockRecord(int fd, int length, int record_id)
 
     const int i = fcntl(fd, F_SETLKW, &lck);
     if(i == -1)
-        throw linda::LindaException(std::string("TupleFileUtils::lockRecord fcntl failed| Errno: ") + strerror(errno));
-    //std::cout << "tuple lock: " <<  record_id << std::endl;
+        throw linda::LindaException(std::string("TupleFileUtils::lockRecord fcntl failed: ") + strerror(errno));
     return i;
 }
 //*********************************************************************************************************************
@@ -30,8 +29,7 @@ int linda::TupleFileUtils::unlockRecord(int fd, int length, int record_id)
     lck.l_len = length;
     const __pid_t t = lck.l_pid = getpid();
     if(t==-1)
-        throw linda::LindaException(strerror(errno));
-    //std::cout << "tuple unlock: " <<  record_id << std::endl;
+        throw linda::LindaException("TupleFileUtils::unlockRecord " + std::string(strerror(errno)));
     return fcntl(fd, F_SETLKW, &lck);
 }
 //*********************************************************************************************************************
@@ -39,10 +37,10 @@ int linda::TupleFileUtils::readRecord(int fd, tuple *tuple_ptr, int record_id)
 {
     const __off_t i = lseek(fd, record_id * (sizeof(tuple)), 0);
     if(i== -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("TupleFileUtils::readRecord lseek " + std::string(strerror(errno)));
     const ssize_t i1 = read(fd, tuple_ptr, sizeof(struct tuple));
     if(i1 == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("TupleFileUtils::readRecord read " + std::string(strerror(errno)));
     return i1;
 }
 //*********************************************************************************************************************
@@ -50,10 +48,10 @@ int linda::TupleFileUtils::writeRecord(int fd, tuple *tuple_ptr, int record_id)
 {
     const __off_t i = lseek(fd, record_id * (sizeof(tuple)), 0);
     if(i ==-1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("TupleFileUtils::writeRecord lseek " + std::string(strerror(errno)));
     const ssize_t i1 = write(fd, tuple_ptr, sizeof(tuple));
     if(i1 == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("TupleFileUtils::writeRecord write " + std::string(strerror(errno)));
     return i1;
 }
 //*********************************************************************************************************************
@@ -79,10 +77,10 @@ int linda::TupleFileUtils::setRecordTaken(int fd, int record_id, int taken)
 {
     const __off_t i = lseek(fd, record_id * sizeof(struct tuple), 0);
     if(i==-1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("TupleFileUtils::setRecordTaken lseek " + std::string(strerror(errno)));
     const ssize_t i1 = write(fd, &taken, sizeof(int));
     if(i1 == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("TupleFileUtils::setRecordTaken write " + std::string(strerror(errno)));
     return i1;
 }
 //*********************************************************************************************************************
@@ -95,12 +93,9 @@ int linda::TupleFileUtils::findAndLock(int fd)
         TupleFileUtils::lockRecord(fd, sizeof(TupleFileUtils::tuple), rec_id);
         if (!TupleFileUtils::checkRecordTaken(fd, rec_id))
         {
-            if (rec_id != 0)
-                TupleFileUtils::unlockRecord(fd, sizeof(TupleFileUtils::tuple), rec_id-1);
             return rec_id;
         }
-        if (rec_id != 0)
-            TupleFileUtils::unlockRecord(fd, sizeof(TupleFileUtils::tuple), rec_id-1);
+        TupleFileUtils::unlockRecord(fd, sizeof(TupleFileUtils::tuple), rec_id);
 
         rec_id++;
     }

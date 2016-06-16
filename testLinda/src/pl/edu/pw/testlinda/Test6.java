@@ -49,7 +49,7 @@ public class Test6 extends Test{
         System.out.println("\t Read result: " + readResult.getString());
         System.out.println("\t Input result: " + inputResult.getString());
 
-        if (outputResult.finished >= inputResult.finished && outputResult.finished >= readResult.finished) {
+        if (outputResult.finished >= inputResult.finished) {
             return true;
         }
         else {

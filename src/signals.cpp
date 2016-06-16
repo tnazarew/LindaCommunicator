@@ -13,10 +13,10 @@ void linda::sigusr1Suspend()
     sigset_t suspend_set;
     const int i = sigfillset(&suspend_set);
     if(i == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("sigusr1Suspend sigfillset" + std::string(strerror(errno)));
     const int i1 = sigdelset(&suspend_set, SIGUSR1);
     if(i1 == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("sigusr1Suspend sigdelset" + std::string(strerror(errno)));
     sigsuspend(&suspend_set);
 }
 //*********************************************************************************************************************

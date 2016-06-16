@@ -15,7 +15,7 @@ public class Main {
         ArrayList<Test> tests = new ArrayList<>();
         tests.add(new Test1(100));
         tests.add(new Test2(100));
-        tests.add(new Test3(100, 100));
+        tests.add(new Test3(50, 50));
         tests.add(new Test4(100));
         tests.add(new Test5(100));
         tests.add(new Test6(100));

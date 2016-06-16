@@ -27,13 +27,13 @@ linda::LindaCommunicator::LindaCommunicator(std::string tuple_file, std::string 
     sigset_t block_set;
 
     if(sigemptyset(&block_set) == -1)
-        throw linda::LindaException("Failed to empty set");
+        throw linda::LindaException("Failed to empty set: "+ std::string(strerror(errno)));
 
     if(sigaddset(&block_set, SIGUSR1) == -1)
-        throw linda::LindaException("Failed to add int signal");
+        throw linda::LindaException("Failed to add int signal: "+ std::string(strerror(errno)));
 
     if(sigprocmask(SIG_BLOCK, &block_set, NULL) == -1)
-        throw linda::LindaException("Failed to block SIGUSR1");
+        throw linda::LindaException("Failed to block SIGUSR1: "+ std::string(strerror(errno)));
 
 }
 //*********************************************************************************************************************
@@ -68,7 +68,7 @@ void linda::LindaCommunicator::wakeProcesses(linda::TupleFileUtils::tuple *tuple
 
             if (close(temp_fd) == -1) {
                 TupleFileUtils::unlockRecord(tuple_fd, sizeof(*tuple), tuple->record_id);
-                throw linda::LindaException("This should never happen");
+                throw linda::LindaException("LindaCommunicator::wakeProcesses close(temp_fd):"+ std::string(strerror(errno)));
             }
 
             ProcessFileUtils::wakeupProcess(pid.pid);
@@ -133,8 +133,6 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
 
         else // nie znaleziono dla nas krotki, nasza jest tą jedyną
         {
-            std::cerr << getpid();
-            std::cerr << "\n";
             return readWhenIFound(proc, t);
         }
     }
@@ -147,7 +145,6 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::read_(std::string pattern
 //*********************************************************************************************************************
 linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound(ProcessFileUtils::process &proc, TupleFileUtils::tuple &t)
 {
-    std::cerr << "DZIWNE ";
     proc.taken = 0;
     ProcessFileUtils::writeRecord(proc_fd, &proc, proc.record_id);
     ProcessFileUtils::unlockRecord(proc_fd, sizeof(proc), proc.record_id);
@@ -156,7 +153,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenOtherProcessFound
 
     int new_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(proc.pid)).c_str(), O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if(new_fd == -1)
-        throw linda::LindaException("Unable to open auxiliary file");
+        throw linda::LindaException("Unable to open auxiliary file: " + std::string(strerror(errno)));
     TupleFileUtils::tuple mes_t;
     TupleFileUtils::readRecord(new_fd, &mes_t, 0);
 
@@ -185,7 +182,7 @@ linda::TupleFileUtils::tuple linda::LindaCommunicator::readWhenNobodyFound(Proce
     int new_fd = open((DEFAULT_FILEPATH + DEF_MES_FILE_PREF + std::to_string(proc.pid)).c_str(), O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if(new_fd == -1)
     {
-        throw linda::LindaException("Unable to open auxiliary file");
+        throw linda::LindaException("Unable to open auxiliary file: " + std::string(strerror(errno)));
 
     }
 
@@ -206,13 +203,12 @@ void linda::ProcessFileUtils::process::initProcess(const std::string &pattern_, 
     found = 0;
     pid = getpid();
     if(pid == -1)
-        throw linda::LindaException("Getpid failed");
+        throw linda::LindaException("Getpid failed: " + std::string(strerror(errno)));
     record_id = rec_id;
     taken = 1;
     memset(pattern, '-', 99);
     pattern_.copy(pattern, pattern_.size());
     pattern[pattern_.size()] = '\0';
-    std::cout << pattern << std::endl;
 }
 //*********************************************************************************************************************
 

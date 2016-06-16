@@ -13,10 +13,9 @@ int  linda::ProcessFileUtils::lockRecord(int fd, int length, int record_id) {
     lck.l_len = length;
     lck.l_pid = getpid();
 
-    std::cout << "process lock: " << record_id << std::endl;
     int res = fcntl(fd, F_SETLKW, &lck);
     if(res == -1)
-        throw linda::LindaException("Can't lock record");
+        throw linda::LindaException("ProcessFileUtils::lockRecord " + std::string(strerror(errno)));
     return res;
 }
 //*********************************************************************************************************************
@@ -29,28 +28,27 @@ int linda::ProcessFileUtils::unlockRecord(int fd, int length, int record_id) {
     lck.l_pid = getpid();
     int res = fcntl(fd, F_SETLKW, &lck);
     if(res == -1)
-        throw linda::LindaException(strerror(errno));
-    std::cout << "process unlock: " <<  record_id << std::endl;
+        throw linda::LindaException("ProcessFileUtils::unlockRecord " + std::string(strerror(errno)));
     return res;
 }
 //*********************************************************************************************************************
 int linda::ProcessFileUtils::readRecord(int fd, process *process_ptr, int record_id) {
     const __off_t i = lseek(fd, record_id * (sizeof(process)), 0);
     if(i == -1)
-        throw linda::LindaException("Lseek error");
+        throw linda::LindaException("ProcessFileUtils::readRecord lseek " + std::string(strerror(errno)));
     int res = read(fd, process_ptr, sizeof(process));
     if(res == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("ProcessFileUtils::readRecord read " + std::string(strerror(errno)));
     return res;
 }
 //*********************************************************************************************************************
 int linda::ProcessFileUtils::writeRecord(int fd, process *process_ptr, int record_id) {
     const __off_t i = lseek(fd, record_id * (sizeof(process)), 0);
     if(i == -1)
-        throw linda::LindaException("Lseek error");
+        throw linda::LindaException("ProcessFileUtils::writeRecord lseek " + std::string(strerror(errno)));
     int res = write(fd, process_ptr, sizeof(process));
     if(res == -1)
-        throw linda::LindaException("Can't write to record");
+        throw linda::LindaException("ProcessFileUtils::writeRecord write " + std::string(strerror(errno)));
     return res;
 }
 //*********************************************************************************************************************
@@ -58,7 +56,7 @@ int linda::ProcessFileUtils::checkRecordTaken(int fd, int record_id) {
     int flag;
     const __off_t i = lseek(fd, record_id * sizeof(process), 0);
     if(i ==-1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("ProcessFileUtils::checkRecordTaken " + std::string(strerror(errno)));
     if (int res = read(fd, &flag, sizeof(int)) > 0) {
         return flag;
     }
@@ -74,10 +72,10 @@ int linda::ProcessFileUtils::setRecordTaken(int fd, int record_id, int taken)
 {
     const __off_t i = lseek(fd, record_id * sizeof(process), 0);
     if(i == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("ProcessFileUtils::setRecordTaken lseek " + std::string(strerror(errno)));
     const ssize_t i1 = write(fd, &taken, sizeof(int));
     if(i1 == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("ProcessFileUtils::setRecordTaken write " + std::string(strerror(errno)));
     return i1;
 }
 //*********************************************************************************************************************
@@ -85,7 +83,7 @@ int linda::ProcessFileUtils::wakeupProcess(pid_t pid)
 {
     const int i = kill(pid, SIGUSR1);
     if(i == -1)
-        throw linda::LindaException(strerror(errno));
+        throw linda::LindaException("ProcessFileUtils::wakeupProcess " + std::string(strerror(errno)));
     return i;
 }
 //*********************************************************************************************************************
@@ -108,12 +106,9 @@ int linda::ProcessFileUtils::findAndLock(int fd)
         ProcessFileUtils::lockRecord(fd, sizeof(ProcessFileUtils::process), rec_id);
         if(!ProcessFileUtils::checkRecordTaken(fd, rec_id))
         {
-            if (rec_id != 0)
-                ProcessFileUtils::unlockRecord(fd, sizeof(ProcessFileUtils::process), rec_id-1);
             return rec_id;
         }
-        if (rec_id != 0)
-            ProcessFileUtils::unlockRecord(fd, sizeof(ProcessFileUtils::process), rec_id-1);
+        ProcessFileUtils::unlockRecord(fd, sizeof(ProcessFileUtils::process), rec_id);
 
 
         rec_id ++;

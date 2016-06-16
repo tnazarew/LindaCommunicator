@@ -10,7 +10,7 @@ linda::TupleFileUtils::tuple linda::MatchesFinder::returnBlockedTuple(int fd, li
 
 
     if(fd == -1)
-        throw linda::LindaException("Error filedescriptor");
+        throw linda::LindaException("MatchesFinder::returnBlockedTuple: " + std::string(strerror(errno)));
     int index = 0;
     TupleFileUtils::tuple tu2;
     while(true) {
@@ -43,7 +43,7 @@ std::vector<linda::ProcessFileUtils::process> linda::MatchesFinder::returnProces
 
 
     if(fd == -1)
-        throw linda::LindaException("Error filedescriptor");
+        throw linda::LindaException("MatchesFinder::returnProcessQueue: "+ std::string(strerror(errno)));
     std::vector<ProcessFileUtils::process> processes;
     int index = 0;
     ProcessFileUtils::process proc;

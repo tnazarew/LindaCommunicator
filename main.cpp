@@ -41,11 +41,9 @@ int main(int argc, char** argv)
         }
         catch (...)
         {
-            std::cerr << "Unknown but very bad error";
+            std::cerr << "Other exception" << std::endl;
+            return -1;
         }
-
-        std::cout<<std::endl;
     }
-    int jou = 0;
     return 0;
 }
